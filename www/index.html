@@ -16,7 +16,7 @@ function bootMsg(){var p=[];if(!window.supabase)p.push('مكتبة Supabase لم
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="حضور الأحد">
+<meta name="apple-mobile-web-app-title" content="Friday">
 <link rel="icon" id="appIconLink">
 <link rel="apple-touch-icon" id="appleIconLink">
 <link rel="manifest" id="manifestLink">
@@ -1086,6 +1086,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       catch (e) { if (e.code === 'inactive') return null; if (e.code === 'auth') return null; throw e; }
     }
     async function signOut() {
+      cardStore(null); cardData = null;
       await unsubscribeAll();
       try { await sb.auth.signOut(); } catch (e) { /* offline logout still clears the local session below */ }
       session = { user: null, profile: null };
@@ -1140,7 +1141,45 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       return s;
     }
 
+    /* ---- card mode: a class QR card (class id + secret key) opens that one class with no login ---- */
+    var CARD_LS = 'friday:card', cardData = null;
+    function cardStored() { try { return JSON.parse(localStorage.getItem(CARD_LS) || 'null'); } catch (e) { return null; } }
+    function cardStore(c) { try { if (c) localStorage.setItem(CARD_LS, JSON.stringify(c)); else localStorage.removeItem(CARD_LS); } catch (e) { /* ignore */ } }
+    async function cardFetch() {
+      var cd = session.card;
+      try {
+        var r = await write(sb.rpc('friday_qr_open', { p_class: cd.classId, p_key: cd.key }), 'qr-open');
+        if (!r || r.ok !== true) throw FridayError('denied', 'invalid card');
+        cardData = r;
+        lsSet(uidKey('card-open'), r);
+        return r;
+      } catch (e) {
+        var ce = classify(e);
+        if (ce.code === 'network') { var c = lsGet(uidKey('card-open')); if (c) { cardData = c; return c; } }
+        throw ce;
+      }
+    }
+    async function openCard(classId, key) {
+      var prev = session;
+      session = { user: { id: 'card-' + classId, email: '' }, profile: { display_name: 'دخول بالكارت', role: 'card', is_active: true }, card: { classId: classId, key: String(key) } };
+      try { await cardFetch(); }
+      catch (e) { session = prev; if (e.code !== 'network') cardStore(null); throw e; }
+      cardStore(null);      // nothing is remembered: the servant scans the card every time
+      return session;
+    }
+    async function cardLoadClasses() {
+      var r = await cardFetch(), cl = r['class'] || {};
+      var kids = (r.children || []).map(function (ch) {
+        return childToUi({ id: ch.id, full_name: ch.full_name, gender: ch.gender, birth_date: ch.birth_date }, {});
+      }).sort(function (a, b) { return String(a.name).localeCompare(String(b.name), 'ar'); });
+      var ui = [{ id: cl.id || session.card.classId, className: cl.name || '', name: cl.name || '', description: cl.description || '', active: true,
+                  qrToken: null, students: kids, servants: [], teacherName: 'دخول بالكارت', _updated: null }];
+      base.classes = snapshotOf(ui);
+      return { classes: ui, fromCache: false };
+    }
+
     async function loadClasses() {
+      if (session.card) return cardLoadClasses();
       var user = needUser();
       try {
         var rows = await read(sb.from('friday_classes').select(CLASS_COLS).order('name'), 'classes');
@@ -1202,6 +1241,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
     // Compare the UI classes with what the server last told us and apply only the differences.
     async function saveClasses(ui) {
+      if (session.card) throw FridayError('denied', 'card mode cannot edit classes');
       var user = needUser();
       var b = base.classes, applied = 0;
       var nowIds = {};   // child id -> class id (current UI)
@@ -1305,6 +1345,15 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
     async function loadAttendance(classId) {
       needUser();
+      if (session.card) {
+        var cr = await cardFetch(), catt = {};
+        (cr.attendance || []).forEach(function (r) {
+          if (!r.date) return;
+          (catt[r.date] = catt[r.date] || {})[r.child_id] = { status: r.status, time: cairoTime(r.marked_at), at: r.marked_at };
+        });
+        base.attendance[classId] = clone(catt);
+        return mergeQueue(classId, catt);
+      }
       var rows = [], from = 0, page = 1000;
       try {
         for (;;) {
@@ -1384,12 +1433,16 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
             var ops = groups[key], first = ops[0];
             try {
               if (first.status) {
-                var r = await write(sb.rpc('friday_mark_attendance', { p_class: first.classId, p_date: first.date,
-                  p_marks: ops.map(function (o) { return { child_id: o.childId, status: o.status, marked_at: o.at }; }) }), 'mark');
+                var markArgs = { p_class: first.classId, p_date: first.date,
+                  p_marks: ops.map(function (o) { return { child_id: o.childId, status: o.status, marked_at: o.at }; }) };
+                if (session.card) markArgs.p_key = session.card.key;
+                var r = await write(sb.rpc(session.card ? 'friday_qr_mark' : 'friday_mark_attendance', markArgs), 'mark');
                 if (!r || r.ok !== true) throw FridayError('denied', 'mark rejected: ' + (r && r.error));
               } else {
                 for (var i = 0; i < ops.length; i++) {
-                  var cr = await write(sb.rpc('friday_clear_attendance', { p_class: first.classId, p_date: first.date, p_child: ops[i].childId }), 'clear');
+                  var clrArgs = { p_class: first.classId, p_date: first.date, p_child: ops[i].childId };
+                  if (session.card) clrArgs.p_key = session.card.key;
+                  var cr = await write(sb.rpc(session.card ? 'friday_qr_clear' : 'friday_clear_attendance', clrArgs), 'clear');
                   if (!cr || cr.ok !== true) throw FridayError('denied', 'clear rejected');
                 }
               }
@@ -1485,10 +1538,12 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
     /* ---------------------------------------------------------------- settings / self check-in */
     async function loadSettings() {
+      if (session.card) return {};
       var rows = await read(sb.from('friday_app_settings').select('setting_key,setting_value'), 'settings');
       var o = {}; (rows || []).forEach(function (r) { o[r.setting_key] = r.setting_value; }); return o;
     }
     async function saveSetting(key, value) {
+      if (session.card) throw FridayError('denied', 'card mode');
       var u = needUser();
       var r = await write(sb.from('friday_app_settings').upsert({ setting_key: key, setting_value: value, updated_by: u.id }, { onConflict: 'setting_key' }).select('setting_key'), 'setting');
       if (!r || !r.length) throw FridayError('denied', 'not saved'); return true;
@@ -1506,6 +1561,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
     /* ---------------------------------------------------------------- realtime (RLS-filtered by Supabase) */
     async function subscribe(classIds, handler) {
+      if (session.card) return false;
       await unsubscribeAll();
       if (!sb.channel) return false;
       (classIds || []).forEach(function (cid) {
@@ -1530,7 +1586,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       loadClasses: loadClasses, saveClasses: saveClasses, loadAttendance: loadAttendance, saveAttendance: saveAttendance, flush: flush, pendingCount: pendingCount,
       listServants: listServants, listAdmins: listAdmins, setUserRole: setUserRole, createServantAccount: createServantAccount, linkServantByEmail: linkServantByEmail, setServantActive: setServantActive,
       renameServant: renameServant, assignServant: assignServant, unassignServant: unassignServant, rotateClassToken: rotateClassToken,
-      loadSettings: loadSettings, saveSetting: saveSetting, childToken: childToken, studentCheckin: studentCheckin,
+      loadSettings: loadSettings, saveSetting: saveSetting, openCard: openCard, cardStored: cardStored, childToken: childToken, studentCheckin: studentCheckin,
       subscribe: subscribe, unsubscribeAll: unsubscribeAll,
       _base: function () { return base; }
     };
@@ -4662,7 +4718,7 @@ function setupManifestAndIcons(){
   document.getElementById('appleIconLink').href = APP_ICON_DATAURI;
   const manifest = {
     name: 'سجل حضور مدارس الأحد',
-    short_name: 'حضور الأحد',
+    short_name: 'Friday',
     start_url: location.pathname + location.search,
     display: 'standalone',
     background_color: '#F8F6F0',
@@ -5109,13 +5165,13 @@ async function loadAttendanceCached(classId){
 }
 function invalidateAttendanceCache(classId){ delete attendanceCache[classId]; }
 
-/* ---------- QR helpers (links carry NO secret any more: opening a class needs a login; a student card carries a per-child token) ---------- */
+/* ---------- QR helpers (the class card carries the class id + its secret key `k`, so scanning opens the class with no login; a student card carries a per-child token) ---------- */
 async function ensureQrKey(classId){
   const c = classes.find(x => x.id === classId);
   if(!c || !c.qrToken){ alert('مش قادر أجهّز الكود — حدّث الصفحة وجرّب تاني'); return false; }
   return true;
 }
-function teacherKeyParam(){ return ''; }
+function teacherKeyParam(classId){ const c = classes.find(x => x.id === classId); return c && c.qrToken ? '&k=' + encodeURIComponent(c.qrToken) : ''; }
 async function studentTokenParam(classId, studentId){
   const c = classes.find(x => x.id === classId);
   return '&t=' + await FD.childToken(c.qrToken, studentId);
@@ -6758,9 +6814,24 @@ async function saveStudentProfile(classId, studentId){
 
 /* ---------------- TEACHER VIEW ---------------- */
 
-async function renderTeacherFromQr(classId){
+async function openClassByCard(classId, key){
+  // returns true when the class opened; false (with a message shown) otherwise
+  if(!FD || !key) return false;
+  try{ await FD.openCard(classId, key); }
+  catch(e){
+    renderLogin(e && e.code === 'network' ? 'مفيش نت — اتصل بالإنترنت وامسح الكارت تاني'
+      : 'الكارت ده قديم أو غير صالح — اطلب كارت جديد من المسؤول أو سجّل دخولك');
+    return true;
+  }
   pendingClassTarget = classId;
-  if(FD && FD.session().user){ await enterApp(); return; }
+  await enterApp();
+  return true;
+}
+async function renderTeacherFromQr(classId, key){
+  pendingClassTarget = classId;
+  const sess = FD && FD.session();
+  if(sess && sess.user && !sess.card){ await enterApp(); return; }      // a signed-in servant/admin
+  if(await openClassByCard(classId, key)) return;
   renderLogin('سجّل دخولك علشان تفتح الفصل');
 }
 
@@ -6821,7 +6892,7 @@ function renderLogin(msg, good){
       </div>
 
       <div class="login-card" style="text-align:center;">
-        <div class="sub">عندك كارت QR لفصل؟ امسحه وبعدها سجّل دخولك</div>
+        <div class="sub">عندك كارت QR لفصلك؟ امسحه وهتدخل الفصل على طول</div>
         <button class="btn btn-line scan-btn" style="margin-top:10px;" onclick="openQrScanner()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V6a2 2 0 0 1 2-2h3M15 4h3a2 2 0 0 1 2 2v3M20 15v3a2 2 0 0 1-2 2h-3M9 20H6a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg> مسح كارت الـQR</button>
       </div>
 
@@ -6840,6 +6911,10 @@ function renderLogin(msg, good){
 let qrScanner = null;
 let qrScanLocked = false;
 
+function getKeyFromQrText(decodedText){
+  try{ const k = new URL(decodedText, location.href).searchParams.get('k'); if(k) return k; }catch(e){}
+  return null;
+}
 function getClassIdFromQrText(decodedText){
   try{
     const url = new URL(decodedText, location.href);
@@ -6943,7 +7018,7 @@ async function onQrScanSuccess(decodedText){
   const modal = document.getElementById('qrScannerModal');
   if(modal) modal.remove();
   if(checkin){ renderSelfCheckin(checkin.ids[0], checkin.ids[1], checkin.t); return; }
-  renderTeacherFromQr(classId);
+  renderTeacherFromQr(classId, getKeyFromQrText(decodedText));
 }
 
 async function closeQrScanner(){
@@ -7030,7 +7105,7 @@ async function renderTeacherDashboard(c, viewDate){
       <label>إجراءات سريعة</label>
       <div class="quick-grid">
         <button type="button" class="qa" onclick="setTab('attendance')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span>تسجيل الحضور</span></button>
-        <button type="button" class="qa" onclick="manageStudents('${classId}')"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c2 .7 3 2.6 3 6"/></svg><span>المخدومين (إضافة / حذف)</span></button>
+        ${(FD && FD.session().card) ? '' : `<button type="button" class="qa" onclick="manageStudents('${classId}')"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c2 .7 3 2.6 3 6"/></svg><span>المخدومين (إضافة / حذف)</span></button>`}
         <button type="button" class="qa" onclick="setTab('stats')"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>نسب الحضور</span></button>
         <button type="button" class="qa" onclick="openClassDashboard('${classId}')"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg><span>لوحة الفصل</span></button>
       </div>
@@ -7370,8 +7445,10 @@ document.addEventListener('focusout', () => { setTimeout(() => { const a = docum
   app.innerHTML = `<div class="empty">جارِ التحميل...</div>`;
   let sess = null;
   try{ sess = await FD.restoreSession(); }catch(e){ console.warn('restore failed', e); }
-  if(sess) await enterApp();
-  else renderLogin(teacherParam ? 'سجّل دخولك علشان تفتح الفصل' : '');
+  if(sess){ await enterApp(); return; }
+  const cardKey = params.get('k');
+  if(teacherParam && cardKey){ if(await openClassByCard(teacherParam, cardKey)) return; }
+  renderLogin(teacherParam ? 'سجّل دخولك علشان تفتح الفصل' : '');
 })();
 
 </script>
