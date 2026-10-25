@@ -28,22 +28,42 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: tools platform-tools platforms;android-36 build-tools;36.0.0
+      - name: Install Android SDK 36
+        run: |
+          SDKM=$(command -v sdkmanager || echo "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager")
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platform-tools" "platforms;android-36" "build-tools;36.0.0" 
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Build web app
+        run: npm run build
+
       - name: Copy the web app into the Android project
         run: npx cap sync android
+
+      - name: Use one fixed signing key (so new versions install over old ones)
+        run: |
+          echo "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" | base64 -d > android/app/friday.keystore
+          cat >> android/app/build.gradle <<'EOF' 
+          android {
+              signingConfigs {
+                  debug {
+                      storeFile file('friday.keystore')
+                      storePassword 'friday-debug'
+                      keyAlias 'friday'
+                      keyPassword 'friday-debug'
+                  }
+              }
+          }
+          EOF
 
       - name: Build debug APK
         working-directory: android
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace 
 
       - name: Name the APK
         run: cp android/app/build/outputs/apk/debug/app-debug.apk attendance-app.apk
