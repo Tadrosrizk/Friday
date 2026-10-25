@@ -16,7 +16,7 @@ function bootMsg(){var p=[];if(!window.supabase)p.push('مكتبة Supabase لم
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Friday">
+<meta name="apple-mobile-web-app-title" content="حضور الأحد">
 <link rel="icon" id="appIconLink">
 <link rel="apple-touch-icon" id="appleIconLink">
 <link rel="manifest" id="manifestLink">
@@ -938,6 +938,11 @@ var supabase=(function(e){function t(e,t){var n={};for(var r in e)Object.prototy
 Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/auth-js: Invalid SIWE message field "resources". Every resource must be a valid string. Provided value: ${t}`);e+=`\n- ${t}`}m+=e}return`${p}\n${m}`}var Q=class extends Error{constructor({message:e,code:t,cause:n,name:r}){super(e,{cause:n}),this.__isWebAuthnError=!0,this.name=r??(n instanceof Error?n.name:void 0)??`Unknown Error`,this.code=t}toJSON(){return{name:this.name,message:this.message,code:this.code}}},Di=class extends Q{constructor(e,t){super({code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:t,message:e}),this.name=`WebAuthnUnknownError`,this.originalError=t}};function Oi({error:e,options:t}){let{publicKey:n}=t;if(!n)throw Error(`options was missing required publicKey property`);if(e.name===`AbortError`){if(t.signal instanceof AbortSignal)return new Q({message:`Registration ceremony was sent an abort signal`,code:`ERROR_CEREMONY_ABORTED`,cause:e})}else if(e.name===`ConstraintError`){if(n.authenticatorSelection?.requireResidentKey===!0)return new Q({message:`Discoverable credentials were required but no available authenticator supported it`,code:`ERROR_AUTHENTICATOR_MISSING_DISCOVERABLE_CREDENTIAL_SUPPORT`,cause:e});if(t.mediation===`conditional`&&n.authenticatorSelection?.userVerification===`required`)return new Q({message:`User verification was required during automatic registration but it could not be performed`,code:`ERROR_AUTO_REGISTER_USER_VERIFICATION_FAILURE`,cause:e});if(n.authenticatorSelection?.userVerification===`required`)return new Q({message:`User verification was required but no available authenticator supported it`,code:`ERROR_AUTHENTICATOR_MISSING_USER_VERIFICATION_SUPPORT`,cause:e})}else if(e.name===`InvalidStateError`)return new Q({message:`The authenticator was previously registered`,code:`ERROR_AUTHENTICATOR_PREVIOUSLY_REGISTERED`,cause:e});else if(e.name===`NotAllowedError`)return new Q({message:e.message,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e});else if(e.name===`NotSupportedError`)return n.pubKeyCredParams.filter(e=>e.type===`public-key`).length===0?new Q({message:`No entry in pubKeyCredParams was of type "public-key"`,code:`ERROR_MALFORMED_PUBKEYCREDPARAMS`,cause:e}):new Q({message:`No available authenticator supported any of the specified pubKeyCredParams algorithms`,code:`ERROR_AUTHENTICATOR_NO_SUPPORTED_PUBKEYCREDPARAMS_ALG`,cause:e});else if(e.name===`SecurityError`){let t=window.location.hostname;if(Fi(t)){if(n.rp.id!==t)return new Q({message:`The RP ID "${n.rp.id}" is invalid for this domain`,code:`ERROR_INVALID_RP_ID`,cause:e})}else return new Q({message:`${window.location.hostname} is an invalid domain`,code:`ERROR_INVALID_DOMAIN`,cause:e})}else if(e.name===`TypeError`){if(n.user.id.byteLength<1||n.user.id.byteLength>64)return new Q({message:`User ID was not between 1 and 64 characters`,code:`ERROR_INVALID_USER_ID_LENGTH`,cause:e})}else if(e.name===`UnknownError`)return new Q({message:`The authenticator was unable to process the specified options, or could not create a new credential`,code:`ERROR_AUTHENTICATOR_GENERAL_ERROR`,cause:e});return new Q({message:`a Non-Webauthn related error has occurred`,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e})}function ki({error:e,options:t}){let{publicKey:n}=t;if(!n)throw Error(`options was missing required publicKey property`);if(e.name===`AbortError`){if(t.signal instanceof AbortSignal)return new Q({message:`Authentication ceremony was sent an abort signal`,code:`ERROR_CEREMONY_ABORTED`,cause:e})}else if(e.name===`NotAllowedError`)return new Q({message:e.message,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e});else if(e.name===`SecurityError`){let t=window.location.hostname;if(Fi(t)){if(n.rpId!==t)return new Q({message:`The RP ID "${n.rpId}" is invalid for this domain`,code:`ERROR_INVALID_RP_ID`,cause:e})}else return new Q({message:`${window.location.hostname} is an invalid domain`,code:`ERROR_INVALID_DOMAIN`,cause:e})}else if(e.name===`UnknownError`)return new Q({message:`The authenticator was unable to process the specified options, or could not create a new assertion signature`,code:`ERROR_AUTHENTICATOR_GENERAL_ERROR`,cause:e});return new Q({message:`a Non-Webauthn related error has occurred`,code:`ERROR_PASSTHROUGH_SEE_CAUSE_PROPERTY`,cause:e})}let Ai=new class{createNewAbortSignal(){if(this.controller){let e=Error(`Cancelling existing WebAuthn API call for new one`);e.name=`AbortError`,this.controller.abort(e)}let e=new AbortController;return this.controller=e,e.signal}cancelCeremony(){if(this.controller){let e=Error(`Manually cancelling existing WebAuthn API call`);e.name=`AbortError`,this.controller.abort(e),this.controller=void 0}}};function ji(e){if(!e)throw Error(`Credential creation options are required`);if(typeof PublicKeyCredential<`u`&&`parseCreationOptionsFromJSON`in PublicKeyCredential&&typeof PublicKeyCredential.parseCreationOptionsFromJSON==`function`)return PublicKeyCredential.parseCreationOptionsFromJSON(e);let{challenge:n,user:r,excludeCredentials:i}=e,a=t(e,[`challenge`,`user`,`excludeCredentials`]),o=Sr(n).buffer,s=Object.assign(Object.assign({},r),{id:Sr(r.id).buffer}),c=Object.assign(Object.assign({},a),{challenge:o,user:s});if(i&&i.length>0){c.excludeCredentials=Array(i.length);for(let e=0;e<i.length;e++){let t=i[e];c.excludeCredentials[e]=Object.assign(Object.assign({},t),{id:Sr(t.id).buffer,type:t.type||`public-key`,transports:t.transports})}}return c}function Mi(e){if(!e)throw Error(`Credential request options are required`);if(typeof PublicKeyCredential<`u`&&`parseRequestOptionsFromJSON`in PublicKeyCredential&&typeof PublicKeyCredential.parseRequestOptionsFromJSON==`function`)return PublicKeyCredential.parseRequestOptionsFromJSON(e);let{challenge:n,allowCredentials:r}=e,i=t(e,[`challenge`,`allowCredentials`]),a=Sr(n).buffer,o=Object.assign(Object.assign({},i),{challenge:a});if(r&&r.length>0){o.allowCredentials=Array(r.length);for(let e=0;e<r.length;e++){let t=r[e];o.allowCredentials[e]=Object.assign(Object.assign({},t),{id:Sr(t.id).buffer,type:t.type||`public-key`,transports:t.transports})}}return o}function Ni(e){if(`toJSON`in e&&typeof e.toJSON==`function`)return e.toJSON();let t=e;return{id:e.id,rawId:e.id,response:{attestationObject:z(new Uint8Array(e.response.attestationObject)),clientDataJSON:z(new Uint8Array(e.response.clientDataJSON))},type:`public-key`,clientExtensionResults:e.getClientExtensionResults(),authenticatorAttachment:t.authenticatorAttachment??void 0}}function Pi(e){if(`toJSON`in e&&typeof e.toJSON==`function`)return e.toJSON();let t=e,n=e.getClientExtensionResults(),r=e.response;return{id:e.id,rawId:e.id,response:{authenticatorData:z(new Uint8Array(r.authenticatorData)),clientDataJSON:z(new Uint8Array(r.clientDataJSON)),signature:z(new Uint8Array(r.signature)),userHandle:r.userHandle?z(new Uint8Array(r.userHandle)):void 0},type:`public-key`,clientExtensionResults:n,authenticatorAttachment:t.authenticatorAttachment??void 0}}function Fi(e){return e===`localhost`||/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(e)}function Ii(){return!!(B()&&`PublicKeyCredential`in window&&window.PublicKeyCredential&&`credentials`in navigator&&typeof(navigator==null?void 0:navigator.credentials)?.create==`function`&&typeof(navigator==null?void 0:navigator.credentials)?.get==`function`)}async function Li(e){try{let t=await navigator.credentials.create(e);return t?t instanceof PublicKeyCredential?{data:t,error:null}:{data:null,error:new Di(`Browser returned unexpected credential type`,t)}:{data:null,error:new Di(`Empty credential response`,t)}}catch(t){return{data:null,error:Oi({error:t,options:e})}}}async function Ri(e){try{let t=await navigator.credentials.get(e);return t?t instanceof PublicKeyCredential?{data:t,error:null}:{data:null,error:new Di(`Browser returned unexpected credential type`,t)}:{data:null,error:new Di(`Empty credential response`,t)}}catch(t){return{data:null,error:ki({error:t,options:e})}}}let zi={hints:[`security-key`],authenticatorSelection:{authenticatorAttachment:`cross-platform`,requireResidentKey:!1,userVerification:`preferred`,residentKey:`discouraged`},attestation:`direct`},Bi={userVerification:`preferred`,hints:[`security-key`],attestation:`direct`};function Vi(...e){let t=e=>typeof e==`object`&&!!e&&!Array.isArray(e),n=e=>e instanceof ArrayBuffer||ArrayBuffer.isView(e),r={};for(let i of e)if(i)for(let e in i){let a=i[e];if(a!==void 0)if(Array.isArray(a))r[e]=a;else if(n(a))r[e]=a;else if(t(a)){let n=r[e];t(n)?r[e]=Vi(n,a):r[e]=Vi(a)}else r[e]=a}return r}function Hi(e,t){return Vi(zi,e,t||{})}function Ui(e,t){return Vi(Bi,e,t||{})}var Wi=class{constructor(e){this.client=e,this.enroll=this._enroll.bind(this),this.challenge=this._challenge.bind(this),this.verify=this._verify.bind(this),this.authenticate=this._authenticate.bind(this),this.register=this._register.bind(this)}async _enroll(e){return this.client.mfa.enroll(Object.assign(Object.assign({},e),{factorType:`webauthn`}))}async _challenge({factorId:e,webauthn:t,friendlyName:n,signal:r},i){try{let{data:a,error:o}=await this.client.mfa.challenge({factorId:e,webauthn:t});if(!a)return{data:null,error:o};let s=r??Ai.createNewAbortSignal();if(a.webauthn.type===`create`){let{user:e}=a.webauthn.credential_options.publicKey;if(!e.name){let t=n;if(t)e.name=`${e.id}:${t}`;else{let t=(await this.client.getUser()).data.user,n=t?.user_metadata?.name||t?.email||t?.id||`User`;e.name=`${e.id}:${n}`}}e.displayName||=e.name}switch(a.webauthn.type){case`create`:{let{data:t,error:n}=await Li({publicKey:Hi(a.webauthn.credential_options.publicKey,i?.create),signal:s});return t?{data:{factorId:e,challengeId:a.id,webauthn:{type:a.webauthn.type,credential_response:t}},error:null}:{data:null,error:n}}case`request`:{let t=Ui(a.webauthn.credential_options.publicKey,i?.request),{data:n,error:r}=await Ri(Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:t,signal:s}));return n?{data:{factorId:e,challengeId:a.id,webauthn:{type:a.webauthn.type,credential_response:n}},error:null}:{data:null,error:r}}}}catch(e){return P(e)?{data:null,error:e}:{data:null,error:new F(`Unexpected error in challenge`,e)}}}async _verify({challengeId:e,factorId:t,webauthn:n}){return this.client.mfa.verify({factorId:t,challengeId:e,webauthn:n})}async _authenticate({factorId:e,webauthn:{rpId:t=typeof window<`u`?window.location.hostname:void 0,rpOrigins:n=typeof window<`u`?[window.location.origin]:void 0,signal:r}={}},i){if(!t)return{data:null,error:new Xn(`rpId is required for WebAuthn authentication`)};try{if(!Ii())return{data:null,error:new F(`Browser does not support WebAuthn`,null)};let{data:a,error:o}=await this.challenge({factorId:e,webauthn:{rpId:t,rpOrigins:n},signal:r},{request:i});if(!a)return{data:null,error:o};let{webauthn:s}=a;return this._verify({factorId:e,challengeId:a.challengeId,webauthn:{type:s.type,rpId:t,rpOrigins:n,credential_response:s.credential_response}})}catch(e){return P(e)?{data:null,error:e}:{data:null,error:new F(`Unexpected error in authenticate`,e)}}}async _register({friendlyName:e,webauthn:{rpId:t=typeof window<`u`?window.location.hostname:void 0,rpOrigins:n=typeof window<`u`?[window.location.origin]:void 0,signal:r}={}},i){if(!t)return{data:null,error:new Xn(`rpId is required for WebAuthn registration`)};try{if(!Ii())return{data:null,error:new F(`Browser does not support WebAuthn`,null)};let{data:a,error:o}=await this._enroll({friendlyName:e});if(!a)return await this.client.mfa.listFactors().then(t=>t.data?.all.find(t=>t.factor_type===`webauthn`&&t.friendly_name===e&&t.status===`unverified`)).then(e=>e?this.client.mfa.unenroll({factorId:e?.id}):void 0),{data:null,error:o};let{data:s,error:c}=await this._challenge({factorId:a.id,friendlyName:a.friendly_name,webauthn:{rpId:t,rpOrigins:n},signal:r},{create:i});return s?this._verify({factorId:a.id,challengeId:s.challengeId,webauthn:{rpId:t,rpOrigins:n,type:s.webauthn.type,credential_response:s.webauthn.credential_response}}):{data:null,error:c}}catch(e){return P(e)?{data:null,error:e}:{data:null,error:new F(`Unexpected error in register`,e)}}}};Si();let Gi={url:`http://localhost:9999`,storageKey:`supabase.auth.token`,autoRefreshToken:!0,persistSession:!0,detectSessionInUrl:!0,headers:Kn,flowType:`implicit`,debug:!1,hasCustomAuthorizationHeader:!1,throwOnError:!1,lockAcquireTimeout:5e3,skipAutoInitialize:!1,experimental:{}},$={},Ki=!1;var qi=class e{get jwks(){return $[this.storageKey]?.jwks??{keys:[]}}set jwks(e){$[this.storageKey]=Object.assign(Object.assign({},$[this.storageKey]),{jwks:e})}get jwks_cached_at(){return $[this.storageKey]?.cachedAt??-(2**53-1)}set jwks_cached_at(e){$[this.storageKey]=Object.assign(Object.assign({},$[this.storageKey]),{cachedAt:e})}constructor(t){var n;this.userStorage=null,this.memoryStorage=null,this.stateChangeEmitters=new Map,this.autoRefreshTicker=null,this.autoRefreshTickTimeout=null,this.visibilityChangedCallback=null,this.refreshingDeferred=null,this.lastRefreshFailure=null,this._sessionRemovalEpoch=0,this.initializePromise=null,this._pendingInitNotifications=null,this.detectSessionInUrl=!0,this.hasCustomAuthorizationHeader=!1,this.suppressGetSessionWarning=!1,this.lock=null,this.lockAcquired=!1,this.pendingInLock=[],this.broadcastChannel=null,this.logger=console.log;let r=Object.assign(Object.assign({},Gi),t);if(this.storageKey=r.storageKey,this.instanceID=e.nextInstanceID[this.storageKey]??0,e.nextInstanceID[this.storageKey]=this.instanceID+1,this.logDebugMessages=!!r.debug,typeof r.debug==`function`&&(this.logger=r.debug),this.instanceID>0&&B()){let e=`${this._logPrefix()} Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.`;console.warn(e),this.logDebugMessages&&console.trace(e)}if(this.persistSession=r.persistSession,this.autoRefreshToken=r.autoRefreshToken,this.experimental=r.experimental??{},this.admin=new mi({url:r.url,headers:r.headers,fetch:r.fetch,experimental:this.experimental}),this.url=r.url,this.headers=r.headers,this.fetch=Or(r.fetch),this.detectSessionInUrl=r.detectSessionInUrl,this.flowType=r.flowType,this.hasCustomAuthorizationHeader=r.hasCustomAuthorizationHeader,this.throwOnError=r.throwOnError,this.lockAcquireTimeout=r.lockAcquireTimeout,r.lock!=null&&(this.lock=r.lock,Ki||(Ki=!0,console.warn(`${this._logPrefix()} The "lock" option is deprecated and will be removed in v3. The client now coordinates session refreshes without a lock, so most apps can drop the option. See https://github.com/supabase/supabase-js/blob/master/packages/core/auth-js/migrations/lockless-coordination.md`))),this.jwks||(this.jwks={keys:[]},this.jwks_cached_at=-(2**53-1)),this.mfa={verify:this._verify.bind(this),enroll:this._enroll.bind(this),unenroll:this._unenroll.bind(this),challenge:this._challenge.bind(this),listFactors:this._listFactors.bind(this),challengeAndVerify:this._challengeAndVerify.bind(this),getAuthenticatorAssuranceLevel:this._getAuthenticatorAssuranceLevel.bind(this),webauthn:new Wi(this),recoveryCodes:{getStatus:this._getRecoveryCodesStatus.bind(this),generate:this._generateRecoveryCodes.bind(this),verify:this._verifyRecoveryCode.bind(this),regenerate:this._regenerateRecoveryCodes.bind(this),unenroll:this._unenrollRecoveryCodes.bind(this)}},this.oauth={getAuthorizationDetails:this._getAuthorizationDetails.bind(this),approveAuthorization:this._approveAuthorization.bind(this),denyAuthorization:this._denyAuthorization.bind(this),listGrants:this._listOAuthGrants.bind(this),revokeGrant:this._revokeOAuthGrant.bind(this)},this.passkey={startRegistration:this._startPasskeyRegistration.bind(this),verifyRegistration:this._verifyPasskeyRegistration.bind(this),startAuthentication:this._startPasskeyAuthentication.bind(this),verifyAuthentication:this._verifyPasskeyAuthentication.bind(this),list:this._listPasskeys.bind(this),update:this._updatePasskey.bind(this),delete:this._deletePasskey.bind(this)},this.persistSession?(r.storage?this.storage=r.storage:Er()?this.storage=globalThis.localStorage:(this.memoryStorage={},this.storage=hi(this.memoryStorage)),r.userStorage&&(this.userStorage=r.userStorage)):(this.memoryStorage={},this.storage=hi(this.memoryStorage)),B()&&globalThis.BroadcastChannel&&this.persistSession&&this.storageKey){try{this.broadcastChannel=new globalThis.BroadcastChannel(this.storageKey)}catch(e){console.error(`Failed to create a new BroadcastChannel, multi-tab state changes will not be available`,e)}(n=this.broadcastChannel)==null||n.addEventListener(`message`,async e=>{this._debug(`received broadcast notification from other tab or client`,e),(e.data.event===`TOKEN_REFRESHED`||e.data.event===`SIGNED_IN`)&&(this.lastRefreshFailure=null);try{await this._notifyAllSubscribers(e.data.event,e.data.session,!1)}catch(e){this._debug(`#broadcastChannel`,`error`,e)}})}r.skipAutoInitialize||this.initialize().catch(e=>{this._debug(`#initialize()`,`error`,e)})}isThrowOnErrorEnabled(){return this.throwOnError}_returnResult(e){if(this.throwOnError&&e&&e.error)throw e.error;return e}_logPrefix(){return`GoTrueClient@${this.storageKey}:${this.instanceID} (${Wn}) ${new Date().toISOString()}`}_debug(...e){return this.logDebugMessages&&this.logger(this._logPrefix(),...e),this}async initialize(){if(this.initializePromise)return await this.initializePromise;this._pendingInitNotifications=[],this.initializePromise=(async()=>this.lock==null?await this._initialize():await this._acquireLock(this.lockAcquireTimeout,async()=>await this._initialize()))();let e=await this.initializePromise,t=this._pendingInitNotifications??[];this._pendingInitNotifications=null;for(let e of t)await this._notifyAllSubscribers(e.event,e.session,e.broadcast);return e}async _initialize(){try{let e={},t=`none`;if(B()&&(e=Dr(window.location.href),this._isImplicitGrantCallback(e)?t=`implicit`:await this._isPKCECallback(e)&&(t=`pkce`)),B()&&this.detectSessionInUrl&&t!==`none`){let{data:n,error:r}=await this._getSessionFromURL(e,t);if(r){if(this._debug(`#_initialize()`,`error detecting session from URL`,r),nr(r)){let e=r.details?.code;if(e===`identity_already_exists`||e===`identity_not_found`||e===`single_identity_not_deletable`)return{error:r}}return{error:r}}let{session:i,redirectType:a}=n;return this._debug(`#_initialize()`,`detected session in URL`,i,`redirect type`,a),await this._saveSession(i),setTimeout(async()=>{a===`recovery`?await this._notifyAllSubscribers(`PASSWORD_RECOVERY`,i):await this._notifyAllSubscribers(`SIGNED_IN`,i)},0),{error:null}}return await this._recoverAndRefresh(),{error:null}}catch(e){return P(e)?this._returnResult({error:e}):this._returnResult({error:new F(`Unexpected error during initialization`,e)})}finally{await this._handleVisibilityChange(),this._debug(`#_initialize()`,`end`)}}async signInAnonymously(e){try{let{data:t,error:n}=await J(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,body:{data:e?.options?.data??{},gotrue_meta_security:{captcha_token:e?.options?.captchaToken}},xform:Y});if(n||!t)return this._returnResult({data:{user:null,session:null},error:n});let r=t.session,i=t.user;return t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers(`SIGNED_IN`,r)),this._returnResult({data:{user:i,session:r},error:null})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signUp(e){let t=null;try{let n;if(`email`in e){let{email:r,password:i,options:a}=e,o=null,s=null;this.flowType===`pkce`&&([o,s,t]=await this._getCodeChallengeAndMethod()),n=await J(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(a?.emailRedirectTo,t),body:{email:r,password:i,data:a?.data??{},gotrue_meta_security:{captcha_token:a?.captchaToken},code_challenge:o,code_challenge_method:s},xform:Y})}else if(`phone`in e){let{phone:t,password:r,options:i}=e;n=await J(this.fetch,`POST`,`${this.url}/signup`,{headers:this.headers,body:{phone:t,password:r,data:i?.data??{},channel:i?.channel??`sms`,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:Y})}else throw new er(`You must provide either an email or phone number and a password`);let{data:r,error:i}=n;if(i||!r)return await G(this.storage,this.storageKey,t),this._returnResult({data:{user:null,session:null},error:i});let a=r.session,o=r.user;return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,a)),this._returnResult({data:{user:o,session:a},error:null})}catch(e){if(await G(this.storage,this.storageKey,t),P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithPassword(e){try{let t;if(`email`in e){let{email:n,password:r,options:i}=e;t=await J(this.fetch,`POST`,`${this.url}/token?grant_type=password`,{headers:this.headers,body:{email:n,password:r,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:ci})}else if(`phone`in e){let{phone:n,password:r,options:i}=e;t=await J(this.fetch,`POST`,`${this.url}/token?grant_type=password`,{headers:this.headers,body:{phone:n,password:r,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:ci})}else throw new er(`You must provide either an email or phone number and a password`);let{data:n,error:r}=t;if(r)return this._returnResult({data:{user:null,session:null},error:r});if(!n||!n.session||!n.user){let e=new R;return this._returnResult({data:{user:null,session:null},error:e})}return n.session&&(await this._saveSession(n.session),await this._notifyAllSubscribers(`SIGNED_IN`,n.session)),this._returnResult({data:Object.assign({user:n.user,session:n.session},n.weak_password?{weakPassword:n.weak_password}:null),error:r})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithOAuth(e){return await this._handleProviderSignIn(e.provider,{redirectTo:e.options?.redirectTo,scopes:e.options?.scopes,queryParams:e.options?.queryParams,skipBrowserRedirect:e.options?.skipBrowserRedirect})}async exchangeCodeForSession(e,t){return await this.initializePromise,this.lock==null?this._exchangeCodeForSession(e,t):this._acquireLock(this.lockAcquireTimeout,async()=>this._exchangeCodeForSession(e,t))}async signInWithWeb3(e){let{chain:t}=e;switch(t){case`ethereum`:return await this.signInWithEthereum(e);case`solana`:return await this.signInWithSolana(e);default:throw Error(`@supabase/auth-js: Unsupported chain "${t}"`)}}async signInWithEthereum(e){let t,n;if(`message`in e)t=e.message,n=e.signature;else{let{chain:r,wallet:i,statement:a,options:o}=e,s;if(B())if(typeof i==`object`)s=i;else{let e=window;if(`ethereum`in e&&typeof e.ethereum==`object`&&`request`in e.ethereum&&typeof e.ethereum.request==`function`)s=e.ethereum;else throw Error(`@supabase/auth-js: No compatible Ethereum wallet interface on the window object (window.ethereum) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'ethereum', wallet: resolvedUserWallet }) instead.`)}else{if(typeof i!=`object`||!o?.url)throw Error(`@supabase/auth-js: Both wallet and url must be specified in non-browser environments.`);s=i}let c=new URL(o?.url??window.location.href),l=await s.request({method:`eth_requestAccounts`}).then(e=>e).catch(()=>{throw Error(`@supabase/auth-js: Wallet method eth_requestAccounts is missing or invalid`)});if(!l||l.length===0)throw Error(`@supabase/auth-js: No accounts available. Please ensure the wallet is connected.`);let u=Ci(l[0]),d=o?.signInWithEthereum?.chainId;d||=wi(await s.request({method:`eth_chainId`})),t=Ei({domain:c.host,address:u,statement:a,uri:c.href,version:`1`,chainId:d,nonce:o?.signInWithEthereum?.nonce,issuedAt:o?.signInWithEthereum?.issuedAt??new Date,expirationTime:o?.signInWithEthereum?.expirationTime,notBefore:o?.signInWithEthereum?.notBefore,requestId:o?.signInWithEthereum?.requestId,resources:o?.signInWithEthereum?.resources}),n=await s.request({method:`personal_sign`,params:[Ti(t),u]})}try{let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:`ethereum`,message:t,signature:n},e.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options?.captchaToken}}:null),xform:Y});if(i)throw i;if(!r||!r.session||!r.user){let e=new R;return this._returnResult({data:{user:null,session:null},error:e})}return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,r.session)),this._returnResult({data:Object.assign({},r),error:i})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithSolana(e){let t,n;if(`message`in e)t=e.message,n=e.signature;else{let{chain:r,wallet:i,statement:a,options:o}=e,s;if(B())if(typeof i==`object`)s=i;else{let e=window;if(`solana`in e&&typeof e.solana==`object`&&(`signIn`in e.solana&&typeof e.solana.signIn==`function`||`signMessage`in e.solana&&typeof e.solana.signMessage==`function`))s=e.solana;else throw Error(`@supabase/auth-js: No compatible Solana wallet interface on the window object (window.solana) detected. Make sure the user already has a wallet installed and connected for this app. Prefer passing the wallet interface object directly to signInWithWeb3({ chain: 'solana', wallet: resolvedUserWallet }) instead.`)}else{if(typeof i!=`object`||!o?.url)throw Error(`@supabase/auth-js: Both wallet and url must be specified in non-browser environments.`);s=i}let c=new URL(o?.url??window.location.href);if(`signIn`in s&&s.signIn){let e=await s.signIn(Object.assign(Object.assign(Object.assign({issuedAt:new Date().toISOString()},o?.signInWithSolana),{version:`1`,domain:c.host,uri:c.href}),a?{statement:a}:null)),r;if(Array.isArray(e)&&e[0]&&typeof e[0]==`object`)r=e[0];else if(e&&typeof e==`object`&&`signedMessage`in e&&`signature`in e)r=e;else throw Error(`@supabase/auth-js: Wallet method signIn() returned unrecognized value`);if(`signedMessage`in r&&`signature`in r&&(typeof r.signedMessage==`string`||r.signedMessage instanceof Uint8Array)&&r.signature instanceof Uint8Array)t=typeof r.signedMessage==`string`?r.signedMessage:new TextDecoder().decode(r.signedMessage),n=r.signature;else throw Error(`@supabase/auth-js: Wallet method signIn() API returned object without signedMessage and signature fields`)}else{if(!(`signMessage`in s)||typeof s.signMessage!=`function`||!(`publicKey`in s)||typeof s!=`object`||!s.publicKey||!(`toBase58`in s.publicKey)||typeof s.publicKey.toBase58!=`function`)throw Error(`@supabase/auth-js: Wallet does not have a compatible signMessage() and publicKey.toBase58() API`);t=[`${c.host} wants you to sign in with your Solana account:`,s.publicKey.toBase58(),...a?[``,a,``]:[``],`Version: 1`,`URI: ${c.href}`,`Issued At: ${o?.signInWithSolana?.issuedAt??new Date().toISOString()}`,...o?.signInWithSolana?.notBefore?[`Not Before: ${o.signInWithSolana.notBefore}`]:[],...o?.signInWithSolana?.expirationTime?[`Expiration Time: ${o.signInWithSolana.expirationTime}`]:[],...o?.signInWithSolana?.chainId?[`Chain ID: ${o.signInWithSolana.chainId}`]:[],...o?.signInWithSolana?.nonce?[`Nonce: ${o.signInWithSolana.nonce}`]:[],...o?.signInWithSolana?.requestId?[`Request ID: ${o.signInWithSolana.requestId}`]:[],...o?.signInWithSolana?.resources?.length?[`Resources`,...o.signInWithSolana.resources.map(e=>`- ${e}`)]:[]].join(`
 `);let e=await s.signMessage(new TextEncoder().encode(t),`utf8`);if(!e||!(e instanceof Uint8Array))throw Error(`@supabase/auth-js: Wallet signMessage() API returned an recognized value`);n=e}}try{let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=web3`,{headers:this.headers,body:Object.assign({chain:`solana`,message:t,signature:z(n)},e.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options?.captchaToken}}:null),xform:Y});if(i)throw i;if(!r||!r.session||!r.user){let e=new R;return this._returnResult({data:{user:null,session:null},error:e})}return r.session&&(await this._saveSession(r.session),await this._notifyAllSubscribers(`SIGNED_IN`,r.session)),this._returnResult({data:Object.assign({},r),error:i})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async _exchangeCodeForSession(e,t){let n=t?.flowId!=null,r=n?zr(t?.flowId):B()?zr(Dr(window.location.href)[N]):null;n&&!r&&this._debug(`#_exchangeCodeForSession()`,`provided flowId is not a valid flow id`,t?.flowId);let{verifier:i,flowId:a}=n&&!r?{verifier:null,flowId:null}:await Gr(this.storage,this.storageKey,r),[o,s]=(i??``).split(`/`);try{if(!o&&this.flowType===`pkce`)throw new ir;let{data:t,error:n}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=pkce`,{headers:this.headers,body:{auth_code:e,code_verifier:o},xform:Y});if(await G(this.storage,this.storageKey,a),n)throw n;if(!t||!t.session||!t.user){let e=new R;return this._returnResult({data:{user:null,session:null,redirectType:null},error:e})}return t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers(s===`recovery`?`PASSWORD_RECOVERY`:`SIGNED_IN`,t.session)),this._returnResult({data:Object.assign(Object.assign({},t),{redirectType:s??null}),error:n})}catch(e){if(await G(this.storage,this.storageKey,a),P(e))return this._returnResult({data:{user:null,session:null,redirectType:null},error:e});throw e}}async signInWithIdToken(e){try{let{options:t,provider:n,token:r,access_token:i,nonce:a}=e,{data:o,error:s}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=id_token`,{headers:this.headers,body:{provider:n,id_token:r,access_token:i,nonce:a,gotrue_meta_security:{captcha_token:t?.captchaToken}},xform:Y});if(s)return this._returnResult({data:{user:null,session:null},error:s});if(!o||!o.session||!o.user){let e=new R;return this._returnResult({data:{user:null,session:null},error:e})}return o.session&&(await this._saveSession(o.session),await this._notifyAllSubscribers(`SIGNED_IN`,o.session)),this._returnResult({data:o,error:s})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithOtp(e){let t=null;try{if(`email`in e){let{email:n,options:r}=e,i=null,a=null;this.flowType===`pkce`&&([i,a,t]=await this._getCodeChallengeAndMethod());let{error:o}=await J(this.fetch,`POST`,`${this.url}/otp`,{headers:this.headers,body:{email:n,data:r?.data??{},create_user:r?.shouldCreateUser??!0,gotrue_meta_security:{captcha_token:r?.captchaToken},code_challenge:i,code_challenge_method:a},redirectTo:this._maybeAppendFlowIdToRedirect(r?.emailRedirectTo,t)});return this._returnResult({data:{user:null,session:null},error:o})}if(`phone`in e){let{phone:t,options:n}=e,{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/otp`,{headers:this.headers,body:{phone:t,data:n?.data??{},create_user:n?.shouldCreateUser??!0,gotrue_meta_security:{captcha_token:n?.captchaToken},channel:n?.channel??`sms`}});return this._returnResult({data:{user:null,session:null,messageId:r?.message_id},error:i})}throw new er(`You must provide either an email or phone number.`)}catch(e){if(await G(this.storage,this.storageKey,t),P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async verifyOtp(e){try{let t,n;`options`in e&&(t=e.options?.redirectTo,n=e.options?.captchaToken);let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/verify`,{headers:this.headers,body:Object.assign(Object.assign({},e),{gotrue_meta_security:{captcha_token:n}}),redirectTo:t,xform:Y});if(i)throw i;if(!r)throw Error(`An error occurred on token verification.`);let a=r.session,o=r.user;return a?.access_token&&(await this._saveSession(a),await this._notifyAllSubscribers(e.type==`recovery`?`PASSWORD_RECOVERY`:`SIGNED_IN`,a)),this._returnResult({data:{user:o,session:a},error:null})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async signInWithSSO(e){let t=null;try{let n=null,r=null;this.flowType===`pkce`&&([n,r,t]=await this._getCodeChallengeAndMethod());let i=await J(this.fetch,`POST`,`${this.url}/sso`,{body:Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({},`providerId`in e?{provider_id:e.providerId}:null),`domain`in e?{domain:e.domain}:null),{redirect_to:this._maybeAppendFlowIdToRedirect(e.options?.redirectTo,t)}),e?.options?.captchaToken?{gotrue_meta_security:{captcha_token:e.options.captchaToken}}:null),{skip_http_redirect:!0,code_challenge:n,code_challenge_method:r}),headers:this.headers,xform:li});return i.data?.url&&B()&&!e.options?.skipBrowserRedirect&&window.location.assign(i.data.url),this._returnResult(i)}catch(e){if(await G(this.storage,this.storageKey,t),P(e))return this._returnResult({data:null,error:e});throw e}}async reauthenticate(){return await this.initializePromise,this.lock==null?await this._reauthenticate():await this._acquireLock(this.lockAcquireTimeout,async()=>await this._reauthenticate())}async _reauthenticate(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;if(n)throw n;if(!t)throw new L;let{error:r}=await J(this.fetch,`GET`,`${this.url}/reauthenticate`,{headers:this.headers,jwt:t.access_token});return this._returnResult({data:{user:null,session:null},error:r})})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async resend(e){let t=null;try{let n=`${this.url}/resend`;if(`email`in e){let{email:r,type:i,options:a}=e,o=null,s=null;this.flowType===`pkce`&&([o,s,t]=await this._getCodeChallengeAndMethod());let{error:c}=await J(this.fetch,`POST`,n,{headers:this.headers,body:{email:r,type:i,gotrue_meta_security:{captcha_token:a?.captchaToken},code_challenge:o,code_challenge_method:s},redirectTo:this._maybeAppendFlowIdToRedirect(a?.emailRedirectTo,t)});return c&&await G(this.storage,this.storageKey,t),this._returnResult({data:{user:null,session:null},error:c})}else if(`phone`in e){let{phone:t,type:r,options:i}=e,{data:a,error:o}=await J(this.fetch,`POST`,n,{headers:this.headers,body:{phone:t,type:r,gotrue_meta_security:{captcha_token:i?.captchaToken}}});return this._returnResult({data:{user:null,session:null,messageId:a?.message_id},error:o})}throw new er(`You must provide either an email or phone number and a type`)}catch(e){if(await G(this.storage,this.storageKey,t),P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async getSession(){return await this.initializePromise,this.lock==null?await this._useSession(async e=>e):await this._acquireLock(this.lockAcquireTimeout,async()=>this._useSession(async e=>e))}async _acquireLock(e,t){this._debug(`#_acquireLock`,`begin`,e);try{if(this.lockAcquired){let e=this.pendingInLock.length?this.pendingInLock[this.pendingInLock.length-1]:Promise.resolve(),n=(async()=>(await e,await t()))();return this.pendingInLock.push((async()=>{try{await n}catch{}})()),n}return await this.lock(`lock:${this.storageKey}`,e,async()=>{this._debug(`#_acquireLock`,`lock acquired for storage key`,this.storageKey);try{this.lockAcquired=!0;let e=t();for(this.pendingInLock.push((async()=>{try{await e}catch{}})()),await e;this.pendingInLock.length;){let e=[...this.pendingInLock];await Promise.all(e),this.pendingInLock.splice(0,e.length)}return await e}finally{this._debug(`#_acquireLock`,`lock released for storage key`,this.storageKey),this.lockAcquired=!1}})}finally{this._debug(`#_acquireLock`,`end`)}}async _useSession(e){this._debug(`#_useSession`,`begin`);try{return await e(await this.__loadSession())}finally{this._debug(`#_useSession`,`end`)}}async __loadSession(){this._debug(`#__loadSession()`,`begin`),this.lock!=null&&!this.lockAcquired&&this._debug(`#__loadSession()`,`used outside of an acquired lock!`,Error().stack);try{let e=null,t=await U(this.storage,this.storageKey);if(this._debug(`#getSession()`,`session from storage`,t),t!==null&&(this._isValidSession(t)?e=t:(this._debug(`#getSession()`,`session from storage is not valid`),await this._removeSession())),!e)return{data:{session:null},error:null};let n=e.expires_at?e.expires_at*1e3-Date.now()<Gn:!1;if(this._debug(`#__loadSession()`,`session has${n?``:` not`} expired`,`expires_at`,e.expires_at),!n)return{data:{session:await this._hydrateSessionUser(e)},error:null};let{data:r,error:i}=await this._callRefreshToken(e.refresh_token);if(i){let e=await U(this.storage,this.storageKey);return e&&this._isValidSession(e)&&e.expires_at&&e.expires_at*1e3>Date.now()?this._returnResult({data:{session:await this._hydrateSessionUser(e)},error:null}):this._returnResult({data:{session:null},error:i})}return this._returnResult({data:{session:r},error:null})}finally{this._debug(`#__loadSession()`,`end`)}}async _hydrateSessionUser(e){if(this.userStorage){let t=await U(this.userStorage,this.storageKey+`-user`);e.user=t?.user?t.user:ti()}if(this.storage.isServer&&e.user&&!e.user.__isUserNotAvailableProxy){let t={value:this.suppressGetSessionWarning};e.user=ni(e.user,t),t.value&&(this.suppressGetSessionWarning=!0)}return e}async getUser(e){if(e)return await this._getUser(e);await this.initializePromise;let t;return t=this.lock==null?await this._getUser():await this._acquireLock(this.lockAcquireTimeout,async()=>await this._getUser()),t.data.user&&(this.suppressGetSessionWarning=!0),t}async _getUser(e){try{return e?await J(this.fetch,`GET`,`${this.url}/user`,{headers:this.headers,jwt:e,xform:X}):await this._useSession(async e=>{let{data:t,error:n}=e;if(n)throw n;return!t.session?.access_token&&!this.hasCustomAuthorizationHeader?{data:{user:null},error:new L}:await J(this.fetch,`GET`,`${this.url}/user`,{headers:this.headers,jwt:t.session?.access_token??void 0,xform:X})})}catch(e){if(P(e))return $n(e)&&await this._removeSession(),this._returnResult({data:{user:null},error:e});throw e}}async updateUser(e,t={}){return await this.initializePromise,this.lock==null?await this._updateUser(e,t):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._updateUser(e,t))}async _updateUser(e,t={}){let n=null;try{return await this._useSession(async r=>{let{data:i,error:a}=r;if(a)throw a;if(!i.session)throw new L;let o=i.session,s=null,c=null;this.flowType===`pkce`&&e.email!=null&&([s,c,n]=await this._getCodeChallengeAndMethod());let{data:l,error:u}=await J(this.fetch,`PUT`,`${this.url}/user`,{headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(t?.emailRedirectTo,n),body:Object.assign(Object.assign({},e),{code_challenge:s,code_challenge_method:c}),jwt:o.access_token,xform:X});if(u)throw u;return o.user=l.user,await this._saveSession(o),await this._notifyAllSubscribers(`USER_UPDATED`,o),this._returnResult({data:{user:o.user},error:null})})}catch(e){if(await G(this.storage,this.storageKey,n),P(e))return this._returnResult({data:{user:null},error:e});throw e}}async setSession(e){return await this.initializePromise,this.lock==null?await this._setSession(e):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._setSession(e))}async _setSession(e){try{if(!e.access_token||!e.refresh_token)throw new L;let t=Date.now()/1e3,n=t,r=!0,i=null,{payload:a}=jr(e.access_token);if(a.exp&&(n=a.exp,r=n<=t),r){let{data:t,error:n}=await this._callRefreshToken(e.refresh_token);if(n)return this._returnResult({data:{user:null,session:null},error:n});if(!t)return{data:{user:null,session:null},error:null};i=t}else{let{data:r,error:a}=await this._getUser(e.access_token);if(a)return this._returnResult({data:{user:null,session:null},error:a});i={access_token:e.access_token,refresh_token:e.refresh_token,user:r.user,token_type:`bearer`,expires_in:n-t,expires_at:n},await this._saveSession(i),await this._notifyAllSubscribers(`SIGNED_IN`,i)}return this._returnResult({data:{user:i.user,session:i},error:null})}catch(e){if(P(e))return this._returnResult({data:{session:null,user:null},error:e});throw e}}async refreshSession(e){return await this.initializePromise,this.lock==null?await this._refreshSession(e):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._refreshSession(e))}async _refreshSession(e){try{return await this._useSession(async t=>{if(!e){let{data:n,error:r}=t;if(r)throw r;e=n.session??void 0}if(!e?.refresh_token)throw new L;let{data:n,error:r}=await this._callRefreshToken(e.refresh_token);return r?this._returnResult({data:{user:null,session:null},error:r}):n?this._returnResult({data:{user:n.user,session:n},error:null}):this._returnResult({data:{user:null,session:null},error:null})})}catch(e){if(P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}}async _getSessionFromURL(e,t){try{if(!B())throw new tr(`No browser detected.`);if(e.error||e.error_description||e.error_code)throw new tr(e.error_description||`Error in URL with unspecified error_description`,{error:e.error||`unspecified_error`,code:e.error_code||`unspecified_code`});switch(t){case`implicit`:if(this.flowType===`pkce`)throw new rr(`Not a valid PKCE flow url.`);break;case`pkce`:if(this.flowType===`implicit`)throw new tr(`Not a valid implicit grant flow url.`);break;default:}if(t===`pkce`){if(this._debug(`#_initialize()`,`begin`,`is PKCE flow`,!0),!e.code)throw new rr(`No code detected.`);let{data:t,error:n}=await this._exchangeCodeForSession(e.code,{flowId:e[N]});if(n)throw n;let r=new URL(window.location.href);return r.searchParams.delete(`code`),r.searchParams.delete(N),window.history.replaceState(window.history.state,``,r.toString()),{data:{session:t.session,redirectType:t.redirectType??null},error:null}}let{provider_token:n,provider_refresh_token:r,access_token:i,refresh_token:a,expires_in:o,expires_at:s,token_type:c}=e;if(!i||!o||!a||!c)throw new tr(`No session defined in URL`);let l=Math.round(Date.now()/1e3),u=parseInt(o),d=l+u;s&&(d=parseInt(s));let f=d-l;f*1e3<=M&&console.warn(`@supabase/gotrue-js: Session as retrieved from URL expires in ${f}s, should have been closer to ${u}s`);let p=d-u;l-p>=120?console.warn(`@supabase/gotrue-js: Session as retrieved from URL was issued over 120s ago, URL could be stale`,p,d,l):l-p<0&&console.warn(`@supabase/gotrue-js: Session as retrieved from URL was issued in the future? Check the device clock for skew`,p,d,l);let{data:m,error:h}=await this._getUser(i);if(h)throw h;let g={provider_token:n,provider_refresh_token:r,access_token:i,expires_in:u,expires_at:d,refresh_token:a,token_type:c,user:m.user};return window.location.hash=``,this._debug(`#_getSessionFromURL()`,`clearing window.location.hash`),this._returnResult({data:{session:g,redirectType:e.type},error:null})}catch(e){if(P(e))return this._returnResult({data:{session:null,redirectType:null},error:e});throw e}}_isImplicitGrantCallback(e){return typeof this.detectSessionInUrl==`function`?this.detectSessionInUrl(new URL(window.location.href),e):!!(e.access_token||e.error||e.error_description||e.error_code)}async _isPKCECallback(e){if(!e.code)return!1;let t=zr(e[N]);return t&&await U(this.storage,Vr(this.storageKey,t))?!0:!!await U(this.storage,`${this.storageKey}-code-verifier`)}async signOut(e={scope:`global`}){return await this.initializePromise,this.lock==null?await this._signOut(e):await this._acquireLock(this.lockAcquireTimeout,async()=>await this._signOut(e))}async _signOut({scope:e}={scope:`global`}){return await this._useSession(async t=>{let n=async()=>{await this._removeSession()},{data:r,error:i}=t;if(i&&!$n(i))return this._returnResult({error:i});let a=r.session?.access_token;if(a){let{error:t}=await this.admin.signOut(a,e);if(t&&!(Qn(t)&&(t.status===404||t.status===401||t.status===403)||$n(t)))return e!==`others`&&await n(),this._returnResult({error:t})}return e!==`others`&&await n(),this._returnResult({error:null})})}onAuthStateChange(e){let t=Tr(),n={id:t,callback:e,unsubscribe:()=>{this._debug(`#unsubscribe()`,`state change callback with id removed`,t),this.stateChangeEmitters.delete(t)}};return this._debug(`#onAuthStateChange()`,`registered callback with id`,t),this.stateChangeEmitters.set(t,n),(async()=>{await this.initializePromise,this.lock==null?await this._emitInitialSession(t):await this._acquireLock(this.lockAcquireTimeout,async()=>{this._emitInitialSession(t)})})(),{data:{subscription:n}}}async _emitInitialSession(e){return await this._useSession(async t=>{try{let{data:{session:n},error:r}=t;if(r)throw r;await this.stateChangeEmitters.get(e)?.callback(`INITIAL_SESSION`,n),this._debug(`INITIAL_SESSION`,`callback id`,e,`session`,n)}catch(t){if(await this.stateChangeEmitters.get(e)?.callback(`INITIAL_SESSION`,null),this._debug(`INITIAL_SESSION`,`callback id`,e,`error`,t),lr(t))return;$n(t)||sr(t)||Qn(t)&&(t.code===`refresh_token_not_found`||t.code===`refresh_token_already_used`||t.code===`session_expired`)?console.warn(t):console.error(t)}})}async resetPasswordForEmail(e,t={}){let n=null,r=null,i=null;this.flowType===`pkce`&&([n,r,i]=await this._getCodeChallengeAndMethod(!0));try{return await J(this.fetch,`POST`,`${this.url}/recover`,{body:{email:e,code_challenge:n,code_challenge_method:r,gotrue_meta_security:{captcha_token:t.captchaToken}},headers:this.headers,redirectTo:this._maybeAppendFlowIdToRedirect(t.redirectTo,i)})}catch(e){if(await G(this.storage,this.storageKey,i),P(e))return this._returnResult({data:null,error:e});throw e}}async getUserIdentities(){try{let{data:e,error:t}=await this.getUser();if(t)throw t;return this._returnResult({data:{identities:e.user.identities??[]},error:null})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async linkIdentity(e){return`token`in e?this.linkIdentityIdToken(e):this.linkIdentityOAuth(e)}async linkIdentityOAuth(e){let t=null;try{let{data:n,error:r}=await this._useSession(async n=>{let{data:r,error:i}=n;if(i)throw i;let{url:a,flowId:o}=await this._getUrlForProvider(`${this.url}/user/identities/authorize`,e.provider,{redirectTo:e.options?.redirectTo,scopes:e.options?.scopes,queryParams:e.options?.queryParams,skipBrowserRedirect:!0});return t=o,await J(this.fetch,`GET`,a,{headers:this.headers,jwt:r.session?.access_token??void 0})});if(r)throw r;return B()&&!e.options?.skipBrowserRedirect&&window.location.assign(n?.url),this._returnResult({data:{provider:e.provider,url:n?.url,flowId:t},error:null})}catch(n){if(P(n))return this._returnResult({data:{provider:e.provider,url:null,flowId:t},error:n});throw n}}async linkIdentityIdToken(e){return await this._useSession(async t=>{try{let{error:n,data:{session:r}}=t;if(n)throw n;let{options:i,provider:a,token:o,access_token:s,nonce:c}=e,{data:l,error:u}=await J(this.fetch,`POST`,`${this.url}/token?grant_type=id_token`,{headers:this.headers,jwt:r?.access_token??void 0,body:{provider:a,id_token:o,access_token:s,nonce:c,link_identity:!0,gotrue_meta_security:{captcha_token:i?.captchaToken}},xform:Y});return u?this._returnResult({data:{user:null,session:null},error:u}):!l||!l.session||!l.user?this._returnResult({data:{user:null,session:null},error:new R}):(l.session&&(await this._saveSession(l.session),await this._notifyAllSubscribers(`USER_UPDATED`,l.session)),this._returnResult({data:l,error:u}))}catch(e){if(await G(this.storage,this.storageKey,null),P(e))return this._returnResult({data:{user:null,session:null},error:e});throw e}})}async unlinkIdentity(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)throw r;return await J(this.fetch,`DELETE`,`${this.url}/user/identities/${e.identity_id}`,{headers:this.headers,jwt:n.session?.access_token??void 0})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _refreshAccessToken(e){let t=`#_refreshAccessToken()`;this._debug(t,`begin`);try{let n=Date.now();return await Nr(async n=>(n>0&&await Mr(200*2**(n-1)),this._debug(t,`refreshing attempt`,n),await J(this.fetch,`POST`,`${this.url}/token?grant_type=refresh_token`,{body:{refresh_token:e},headers:this.headers,xform:Y})),(e,t)=>{let r=200*2**e;return t&&sr(t)&&Date.now()+r-n<M})}catch(e){if(this._debug(t,`error`,e),P(e))return this._returnResult({data:{session:null,user:null},error:e});throw e}finally{this._debug(t,`end`)}}_isValidSession(e){return typeof e==`object`&&!!e&&`access_token`in e&&`refresh_token`in e&&`expires_at`in e}async _handleProviderSignIn(e,t){let{url:n,flowId:r}=await this._getUrlForProvider(`${this.url}/authorize`,e,{redirectTo:t.redirectTo,scopes:t.scopes,queryParams:t.queryParams});return this._debug(`#_handleProviderSignIn()`,`provider`,e,`options`,t,`url`,n),B()&&!t.skipBrowserRedirect&&window.location.assign(n),{data:{provider:e,url:n,flowId:r},error:null}}async _recoverAndRefresh(){let e=`#_recoverAndRefresh()`;this._debug(e,`begin`);try{let t=await U(this.storage,this.storageKey);if(t&&this.userStorage){let e=await U(this.userStorage,this.storageKey+`-user`);!this.storage.isServer&&Object.is(this.storage,this.userStorage)&&!e&&(e={user:t.user},await H(this.userStorage,this.storageKey+`-user`,e)),t.user=e?.user??ti()}else if(t&&!t.user&&!t.user){let e=await U(this.storage,this.storageKey+`-user`);e&&e?.user?(t.user=e.user,await W(this.storage,this.storageKey+`-user`),await H(this.storage,this.storageKey,t)):t.user=ti()}if(this._debug(e,`session from storage`,t),!this._isValidSession(t)){this._debug(e,`session is not valid`),t!==null&&await this._removeSession();return}let n=(t.expires_at??1/0)*1e3-Date.now()<Gn;if(this._debug(e,`session has${n?``:` not`} expired with margin of ${Gn}s`),n){if(this.autoRefreshToken&&t.refresh_token){let{error:n}=await this._callRefreshToken(t.refresh_token);n&&(lr(n)?this._debug(e,`refresh discarded by commit guard`,n):this._debug(e,`refresh failed`,n))}}else if(t.user&&t.user.__isUserNotAvailableProxy===!0)try{let{data:n,error:r}=await this._getUser(t.access_token);!r&&n?.user?(t.user=n.user,await this._saveSession(t),await this._notifyAllSubscribers(`SIGNED_IN`,t)):this._debug(e,`could not get user data, skipping SIGNED_IN notification`)}catch(t){console.error(`Error getting user data:`,t),this._debug(e,`error getting user data, skipping SIGNED_IN notification`,t)}else await this._notifyAllSubscribers(`SIGNED_IN`,t)}catch(t){this._debug(e,`error`,t),sr(t)?console.warn(t):console.error(t);return}finally{this._debug(e,`end`)}}async _callRefreshToken(e){var t,n;if(!e)throw new L;if(this.refreshingDeferred)return this.refreshingDeferred.promise;if(this.lastRefreshFailure&&this.lastRefreshFailure.refreshToken===e&&Date.now()<this.lastRefreshFailure.expiresAt)return this._debug(`#_callRefreshToken()`,`returning cached failure (cooldown active)`),this.lastRefreshFailure.result;let r=`#_callRefreshToken()`;this._debug(r,`begin`);try{this.refreshingDeferred=new Ar,this.refreshingDeferred.promise.then(void 0,()=>{});let t=await U(this.storage,this.storageKey),{data:n,error:i}=await this._refreshAccessToken(e);if(i)throw i;if(!n.session)throw new L;let a=await U(this.storage,this.storageKey);if(t!==null&&(a===null||a.refresh_token!==t.refresh_token)){this._debug(r,`commit guard: storage changed since refresh started, discarding rotated tokens`,{startedWith:`present`,nowHolds:a?`replaced`:`cleared`});let e={data:null,error:new cr};return this.refreshingDeferred.resolve(e),e}let o=this._sessionRemovalEpoch;if(await this._saveSession(n.session),this._sessionRemovalEpoch!==o){this._debug(r,`commit guard (post-save): _removeSession ran during _saveSession, undoing write`),await W(this.storage,this.storageKey),this.userStorage&&await W(this.userStorage,this.storageKey+`-user`);let e={data:null,error:new cr};return this.refreshingDeferred.resolve(e),e}await this._notifyAllSubscribers(`TOKEN_REFRESHED`,n.session);let s={data:n.session,error:null};return this.lastRefreshFailure=null,this.refreshingDeferred.resolve(s),s}catch(i){if(this._debug(r,`error`,i),P(i)){let n={data:null,error:i};if(!sr(i)){let e=await U(this.storage,this.storageKey);e?.expires_at&&e.expires_at*1e3>Date.now()?this._debug(r,`proactive refresh failed, access token still valid — preserving session`):await this._removeSession()}return this.lastRefreshFailure={refreshToken:e,result:n,expiresAt:Date.now()+6e4},(t=this.refreshingDeferred)==null||t.resolve(n),n}throw(n=this.refreshingDeferred)==null||n.reject(i),i}finally{this.refreshingDeferred=null,this._debug(r,`end`)}}async _notifyAllSubscribers(e,t,n=!0){if(this._pendingInitNotifications!==null&&n){this._pendingInitNotifications.push({event:e,session:t,broadcast:n});return}let r=`#_notifyAllSubscribers(${e})`;this._debug(r,`begin`,t,`broadcast = ${n}`);try{this.broadcastChannel&&n&&this.broadcastChannel.postMessage({event:e,session:t});let r=[],i=Array.from(this.stateChangeEmitters.values()).map(async n=>{try{await n.callback(e,t)}catch(e){r.push(e)}});if(await Promise.all(i),r.length>0){for(let e=0;e<r.length;e+=1)console.error(r[e]);throw r[0]}}finally{this._debug(r,`end`)}}async _saveSession(e){this._debug(`#_saveSession()`,e),this.suppressGetSessionWarning=!0;let t=Object.assign({},e),n=t.user&&t.user.__isUserNotAvailableProxy===!0;if(this.userStorage){!n&&t.user&&await H(this.userStorage,this.storageKey+`-user`,{user:t.user});let e=Object.assign({},t);delete e.user;let r=ri(e);await H(this.storage,this.storageKey,r)}else{let e=ri(t);await H(this.storage,this.storageKey,e)}}async _removeSession(){this._sessionRemovalEpoch+=1,this._debug(`#_removeSession()`),this.lastRefreshFailure=null,this.suppressGetSessionWarning=!1,await W(this.storage,this.storageKey),await Kr(this.storage,this.storageKey),await W(this.storage,this.storageKey+`-user`),this.userStorage&&await W(this.userStorage,this.storageKey+`-user`),await this._notifyAllSubscribers(`SIGNED_OUT`,null)}_removeVisibilityChangedCallback(){this._debug(`#_removeVisibilityChangedCallback()`);let e=this.visibilityChangedCallback;this.visibilityChangedCallback=null;try{e&&B()&&window!=null&&window.removeEventListener&&window.removeEventListener(`visibilitychange`,e)}catch(e){console.error(`removing visibilitychange callback failed`,e)}}async _startAutoRefresh(){await this._stopAutoRefresh(),this._debug(`#_startAutoRefresh()`);let e=setInterval(()=>this._autoRefreshTokenTick(),M);this.autoRefreshTicker=e,e&&typeof e==`object`&&typeof e.unref==`function`?e.unref():typeof Deno<`u`&&typeof Deno.unrefTimer==`function`&&Deno.unrefTimer(e);let t=setTimeout(async()=>{await this.initializePromise,await this._autoRefreshTokenTick()},0);this.autoRefreshTickTimeout=t,t&&typeof t==`object`&&typeof t.unref==`function`?t.unref():typeof Deno<`u`&&typeof Deno.unrefTimer==`function`&&Deno.unrefTimer(t)}async _stopAutoRefresh(){this._debug(`#_stopAutoRefresh()`);let e=this.autoRefreshTicker;this.autoRefreshTicker=null,e&&clearInterval(e);let t=this.autoRefreshTickTimeout;this.autoRefreshTickTimeout=null,t&&clearTimeout(t)}async startAutoRefresh(){this._removeVisibilityChangedCallback(),await this._startAutoRefresh()}async stopAutoRefresh(){this._removeVisibilityChangedCallback(),await this._stopAutoRefresh()}async dispose(){var e;this._removeVisibilityChangedCallback(),await this._stopAutoRefresh(),(e=this.broadcastChannel)==null||e.close(),this.broadcastChannel=null,this.stateChangeEmitters.clear()}async _autoRefreshTokenTick(){if(this._debug(`#_autoRefreshTokenTick()`,`begin`),this.lock!=null){try{await this._acquireLock(0,async()=>{try{let e=Date.now();try{return await this._useSession(async t=>{let{data:{session:n}}=t;if(!n||!n.refresh_token||!n.expires_at){this._debug(`#_autoRefreshTokenTick()`,`no session`);return}let r=Math.floor((n.expires_at*1e3-e)/M);this._debug(`#_autoRefreshTokenTick()`,`access token expires in ${r} ticks, a tick lasts ${M}ms, refresh threshold is 3 ticks`),r<=3&&await this._callRefreshToken(n.refresh_token)})}catch(e){console.error(`Auto refresh tick failed with error. This is likely a transient error.`,e)}}finally{this._debug(`#_autoRefreshTokenTick()`,`end`)}})}catch(e){if(e instanceof gi)this._debug(`auto refresh token tick lock not available`);else throw e}return}if(this.refreshingDeferred!==null){this._debug(`#_autoRefreshTokenTick()`,`refresh already in flight, skipping`);return}try{let e=Date.now();try{await this._useSession(async t=>{let{data:{session:n}}=t;if(!n||!n.refresh_token||!n.expires_at){this._debug(`#_autoRefreshTokenTick()`,`no session`);return}let r=Math.floor((n.expires_at*1e3-e)/M);this._debug(`#_autoRefreshTokenTick()`,`access token expires in ${r} ticks, a tick lasts ${M}ms, refresh threshold is 3 ticks`),r<=3&&await this._callRefreshToken(n.refresh_token)})}catch(e){console.error(`Auto refresh tick failed with error. This is likely a transient error.`,e)}}finally{this._debug(`#_autoRefreshTokenTick()`,`end`)}}async _handleVisibilityChange(){if(this._debug(`#_handleVisibilityChange()`),!B()||!(window!=null&&window.addEventListener))return this.autoRefreshToken&&this.startAutoRefresh(),!1;try{this.visibilityChangedCallback=async()=>{try{await this._onVisibilityChanged(!1)}catch(e){this._debug(`#visibilityChangedCallback`,`error`,e)}},window==null||window.addEventListener(`visibilitychange`,this.visibilityChangedCallback),await this._onVisibilityChanged(!0)}catch(e){console.error(`_handleVisibilityChange`,e)}}async _onVisibilityChanged(e){let t=`#_onVisibilityChanged(${e})`;if(this._debug(t,`visibilityState`,document.visibilityState),document.visibilityState===`visible`){if(this.autoRefreshToken&&this._startAutoRefresh(),!e)if(await this.initializePromise,this.lock!=null)await this._acquireLock(this.lockAcquireTimeout,async()=>{if(document.visibilityState!==`visible`){this._debug(t,`acquired the lock to recover the session, but the browser visibilityState is no longer visible, aborting`);return}await this._recoverAndRefresh()});else{if(document.visibilityState!==`visible`){this._debug(t,`visibilityState is no longer visible, skipping recovery`);return}await this._recoverAndRefresh()}}else document.visibilityState===`hidden`&&this.autoRefreshToken&&this._stopAutoRefresh()}async _getUrlForProvider(e,t,n){let r=n?.redirectTo,i=null,a=null,o=null;this.flowType===`pkce`&&([i,a,o]=await this._getCodeChallengeAndMethod(),r=this._maybeAppendFlowIdToRedirect(r,o));let s=[`provider=${encodeURIComponent(t)}`];if(r&&s.push(`redirect_to=${encodeURIComponent(r)}`),n?.scopes&&s.push(`scopes=${encodeURIComponent(n.scopes)}`),i!=null&&a!=null){let e=new URLSearchParams({code_challenge:`${encodeURIComponent(i)}`,code_challenge_method:`${encodeURIComponent(a)}`});s.push(e.toString())}if(n?.queryParams){let e=new URLSearchParams(n.queryParams);s.push(e.toString())}return n?.skipBrowserRedirect&&s.push(`skip_http_redirect=${n.skipBrowserRedirect}`),{url:`${e}?${s.join(`&`)}`,flowId:o}}_maybeAppendFlowIdToRedirect(e,t){return!e||!t||!this.experimental.appendPkceFlowIdToRedirects?e??void 0:qr(e,t)}async _getCodeChallengeAndMethod(e=!1){return Jr(this.storage,this.storageKey,e,e=>this._debug(`#_getCodeChallengeAndMethod()`,`evicted oldest pending PKCE verifier slot`,e))}async _unenroll(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;return r?this._returnResult({data:null,error:r}):await J(this.fetch,`DELETE`,`${this.url}/factors/${e.factorId}`,{headers:this.headers,jwt:n?.session?.access_token})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _enroll(e){try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=Object.assign({friendly_name:e.friendlyName,factor_type:e.factorType},e.factorType===`phone`?{phone:e.phone}:e.factorType===`totp`?{issuer:e.issuer}:{}),{data:a,error:o}=await J(this.fetch,`POST`,`${this.url}/factors`,{body:i,headers:this.headers,jwt:n?.session?.access_token});return o?this._returnResult({data:null,error:o}):(e.factorType===`totp`&&a.type===`totp`&&a?.totp?.qr_code&&(a.totp.qr_code=`data:image/svg+xml;utf-8,${a.totp.qr_code}`),this._returnResult({data:a,error:null}))})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _verify(e){let t=async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=Object.assign({challenge_id:e.challengeId},`webauthn`in e?{webauthn:Object.assign(Object.assign({},e.webauthn),{credential_response:e.webauthn.type===`create`?Ni(e.webauthn.credential_response):Pi(e.webauthn.credential_response)})}:{code:e.code}),{data:a,error:o}=await J(this.fetch,`POST`,`${this.url}/factors/${e.factorId}/verify`,{body:i,headers:this.headers,jwt:n?.session?.access_token});return o?this._returnResult({data:null,error:o}):(await this._saveSession(Object.assign({expires_at:Math.round(Date.now()/1e3)+a.expires_in},a)),await this._notifyAllSubscribers(`MFA_CHALLENGE_VERIFIED`,a),this._returnResult({data:a,error:o}))})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}};return this.lock==null?t():this._acquireLock(this.lockAcquireTimeout,t)}async _challenge(e){let t=async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let i=await J(this.fetch,`POST`,`${this.url}/factors/${e.factorId}/challenge`,{body:e,headers:this.headers,jwt:n?.session?.access_token});if(i.error)return i;let{data:a}=i;if(a.type!==`webauthn`)return{data:a,error:null};switch(a.webauthn.type){case`create`:return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:ji(a.webauthn.credential_options.publicKey)})})}),error:null};case`request`:return{data:Object.assign(Object.assign({},a),{webauthn:Object.assign(Object.assign({},a.webauthn),{credential_options:Object.assign(Object.assign({},a.webauthn.credential_options),{publicKey:Mi(a.webauthn.credential_options.publicKey)})})}),error:null}}})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}};return this.lock==null?t():this._acquireLock(this.lockAcquireTimeout,t)}async _challengeAndVerify(e){let{data:t,error:n}=await this._challenge({factorId:e.factorId});return n?this._returnResult({data:null,error:n}):await this._verify({factorId:e.factorId,challengeId:t.id,code:e.code})}async _listFactors(){let{data:{user:e},error:t}=await this.getUser();if(t)return{data:null,error:t};let n={all:[],phone:[],totp:[],webauthn:[],recovery_code:[]};for(let t of e?.factors??[])n.all.push(t),t.status===`verified`&&t.factor_type in n&&Array.isArray(n[t.factor_type])&&n[t.factor_type].push(t);return{data:n,error:null}}async _getAuthenticatorAssuranceLevel(e){if(e)try{let{payload:t}=jr(e),n=null;t.aal&&(n=t.aal);let r=n,{data:{user:i},error:a}=await this.getUser(e);if(a)return this._returnResult({data:null,error:a});((i?.factors)?.filter(e=>e.status===`verified`)??[]).length>0&&(r=`aal2`);let o=t.amr||[];return{data:{currentLevel:n,nextLevel:r,currentAuthenticationMethods:o},error:null}}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}let{data:{session:t},error:n}=await this.getSession();if(n)return this._returnResult({data:null,error:n});if(!t)return{data:{currentLevel:null,nextLevel:null,currentAuthenticationMethods:[]},error:null};let{payload:r}=jr(t.access_token),i=null;r.aal&&(i=r.aal);let a=i;(t.user.factors?.filter(e=>e.status===`verified`)??[]).length>0&&(a=`aal2`);let o=r.amr||[];return{data:{currentLevel:i,nextLevel:a,currentAuthenticationMethods:o},error:null}}async _getRecoveryCodesStatus(){ei(this.experimental);try{return await this._useSession(async e=>{let{data:t,error:n}=e;if(n)return this._returnResult({data:null,error:n});let{data:r,error:i}=await J(this.fetch,`GET`,`${this.url}/factors/recovery-codes`,{headers:this.headers,jwt:t?.session?.access_token});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _generateRecoveryCodes(e){ei(this.experimental);try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let{data:i,error:a}=await J(this.fetch,`POST`,`${this.url}/factors/recovery-codes`,{body:e?.friendlyName?{friendly_name:e.friendlyName}:void 0,headers:this.headers,jwt:n?.session?.access_token});return a?this._returnResult({data:null,error:a}):this._returnResult({data:i,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _verifyRecoveryCode(e){ei(this.experimental);let t=async()=>{try{return await this._useSession(async t=>{let{data:n,error:r}=t;if(r)return this._returnResult({data:null,error:r});let{data:i,error:a}=await J(this.fetch,`POST`,`${this.url}/factors/recovery-codes/verify`,{body:{code:e.code},headers:this.headers,jwt:n?.session?.access_token});if(a)return this._returnResult({data:null,error:a});let o=Object.assign({expires_at:wr(i.expires_in)},i);return await this._saveSession(o),await this._notifyAllSubscribers(`MFA_CHALLENGE_VERIFIED`,o),this._returnResult({data:i,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}};return this.lock==null?t():this._acquireLock(this.lockAcquireTimeout,t)}async _regenerateRecoveryCodes(){ei(this.experimental);try{return await this._useSession(async e=>{let{data:t,error:n}=e;if(n)return this._returnResult({data:null,error:n});let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/factors/recovery-codes/regenerate`,{headers:this.headers,jwt:t?.session?.access_token});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _unenrollRecoveryCodes(){ei(this.experimental);try{return await this._useSession(async e=>{let{data:t,error:n}=e;if(n)return this._returnResult({data:null,error:n});let{data:r,error:i}=await J(this.fetch,`DELETE`,`${this.url}/factors/recovery-codes`,{headers:this.headers,jwt:t?.session?.access_token});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _getAuthorizationDetails(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;return r?this._returnResult({data:null,error:r}):n?await J(this.fetch,`GET`,`${this.url}/oauth/authorizations/${e}`,{headers:this.headers,jwt:n.access_token,xform:e=>({data:e,error:null})}):this._returnResult({data:null,error:new L})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _approveAuthorization(e,t){try{return await this._useSession(async n=>{let{data:{session:r},error:i}=n;if(i)return this._returnResult({data:null,error:i});if(!r)return this._returnResult({data:null,error:new L});let a=await J(this.fetch,`POST`,`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:r.access_token,body:{action:`approve`},xform:e=>({data:e,error:null})});return a.data&&a.data.redirect_url&&B()&&!t?.skipBrowserRedirect&&window.location.assign(a.data.redirect_url),a})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _denyAuthorization(e,t){try{return await this._useSession(async n=>{let{data:{session:r},error:i}=n;if(i)return this._returnResult({data:null,error:i});if(!r)return this._returnResult({data:null,error:new L});let a=await J(this.fetch,`POST`,`${this.url}/oauth/authorizations/${e}/consent`,{headers:this.headers,jwt:r.access_token,body:{action:`deny`},xform:e=>({data:e,error:null})});return a.data&&a.data.redirect_url&&B()&&!t?.skipBrowserRedirect&&window.location.assign(a.data.redirect_url),a})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _listOAuthGrants(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;return n?this._returnResult({data:null,error:n}):t?await J(this.fetch,`GET`,`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:t.access_token,xform:e=>({data:e,error:null})}):this._returnResult({data:null,error:new L})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _revokeOAuthGrant(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;return r?this._returnResult({data:null,error:r}):n?(await J(this.fetch,`DELETE`,`${this.url}/user/oauth/grants`,{headers:this.headers,jwt:n.access_token,query:{client_id:e.clientId},noResolveJson:!0}),{data:{},error:null}):this._returnResult({data:null,error:new L})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async fetchJwk(e,t={keys:[]}){let n=t.keys.find(t=>t.kid===e);if(n)return n;let r=Date.now();if(n=this.jwks.keys.find(t=>t.kid===e),n&&this.jwks_cached_at+6e5>r)return n;let{data:i,error:a}=await J(this.fetch,`GET`,`${this.url}/.well-known/jwks.json`,{headers:this.headers});if(a)throw a;return!i.keys||i.keys.length===0||(this.jwks=i,this.jwks_cached_at=r,n=i.keys.find(t=>t.kid===e),!n)?null:n}async getClaims(e,t={}){try{let n=e;if(!n){let{data:e,error:t}=await this.getSession();if(t||!e.session)return this._returnResult({data:null,error:t});n=e.session.access_token}let{header:r,payload:i,signature:a,raw:{header:o,payload:s}}=jr(n);if(!t?.allowExpired)try{Zr(i.exp)}catch(e){throw new fr(e instanceof Error?e.message:`JWT validation failed`)}let c=!r.alg||r.alg.startsWith(`HS`)||!r.kid||!(`crypto`in globalThis&&`subtle`in globalThis.crypto)?null:await this.fetchJwk(r.kid,t?.keys?{keys:t.keys}:t?.jwks);if(!c){let{error:e}=await this.getUser(n);if(e)throw e;return{data:{claims:i,header:r,signature:a},error:null}}let l=Qr(r.alg),u=await crypto.subtle.importKey(`jwk`,c,l,!0,[`verify`]);if(!await crypto.subtle.verify(l,u,a,Cr(`${o}.${s}`)))throw new fr(`Invalid JWT signature`);return{data:{claims:i,header:r,signature:a},error:null}}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async signInWithPasskey(e){try{if(!Ii())return this._returnResult({data:null,error:new F(`Browser does not support WebAuthn`,null)});let{data:t,error:n}=await this._startPasskeyAuthentication({options:{captchaToken:e?.options?.captchaToken}});if(n||!t)return this._returnResult({data:null,error:n});let{data:r,error:i}=await Ri({publicKey:Mi(t.options),signal:e?.options?.signal??Ai.createNewAbortSignal(),mediation:e?.options?.mediation});if(i||!r)return this._returnResult({data:null,error:i??new F(`WebAuthn ceremony failed`,null)});let a=Pi(r);return this._verifyPasskeyAuthentication({challengeId:t.challenge_id,credential:a})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async registerPasskey(e){try{if(!Ii())return this._returnResult({data:null,error:new F(`Browser does not support WebAuthn`,null)});let{data:t,error:n}=await this._startPasskeyRegistration();if(n||!t)return this._returnResult({data:null,error:n});let{data:r,error:i}=await Li({publicKey:ji(t.options),signal:e?.options?.signal??Ai.createNewAbortSignal()});if(i||!r)return this._returnResult({data:null,error:i??new F(`WebAuthn ceremony failed`,null)});let a=Ni(r);return this._verifyPasskeyRegistration({challengeId:t.challenge_id,credential:a})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _startPasskeyRegistration(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;if(n)return this._returnResult({data:null,error:n});if(!t)return this._returnResult({data:null,error:new L});let{data:r,error:i}=await J(this.fetch,`POST`,`${this.url}/passkeys/registration/options`,{headers:this.headers,jwt:t.access_token,body:{}});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _verifyPasskeyRegistration(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;if(r)return this._returnResult({data:null,error:r});if(!n)return this._returnResult({data:null,error:new L});let{data:i,error:a}=await J(this.fetch,`POST`,`${this.url}/passkeys/registration/verify`,{headers:this.headers,jwt:n.access_token,body:{challenge_id:e.challengeId,credential:e.credential}});return a?this._returnResult({data:null,error:a}):this._returnResult({data:i,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _startPasskeyAuthentication(e){try{let{data:t,error:n}=await J(this.fetch,`POST`,`${this.url}/passkeys/authentication/options`,{headers:this.headers,body:{gotrue_meta_security:{captcha_token:e?.options?.captchaToken}}});return n?this._returnResult({data:null,error:n}):this._returnResult({data:t,error:null})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _verifyPasskeyAuthentication(e){try{let{data:t,error:n}=await J(this.fetch,`POST`,`${this.url}/passkeys/authentication/verify`,{headers:this.headers,body:{challenge_id:e.challengeId,credential:e.credential},xform:Y});return n?this._returnResult({data:null,error:n}):(t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers(`SIGNED_IN`,t.session)),this._returnResult({data:t,error:null}))}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _listPasskeys(){try{return await this._useSession(async e=>{let{data:{session:t},error:n}=e;if(n)return this._returnResult({data:null,error:n});if(!t)return this._returnResult({data:null,error:new L});let{data:r,error:i}=await J(this.fetch,`GET`,`${this.url}/passkeys`,{headers:this.headers,jwt:t.access_token,xform:e=>({data:e,error:null})});return i?this._returnResult({data:null,error:i}):this._returnResult({data:r,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _updatePasskey(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;if(r)return this._returnResult({data:null,error:r});if(!n)return this._returnResult({data:null,error:new L});let{data:i,error:a}=await J(this.fetch,`PATCH`,`${this.url}/passkeys/${e.passkeyId}`,{headers:this.headers,jwt:n.access_token,body:{friendly_name:e.friendlyName}});return a?this._returnResult({data:null,error:a}):this._returnResult({data:i,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}async _deletePasskey(e){try{return await this._useSession(async t=>{let{data:{session:n},error:r}=t;if(r)return this._returnResult({data:null,error:r});if(!n)return this._returnResult({data:null,error:new L});let{error:i}=await J(this.fetch,`DELETE`,`${this.url}/passkeys/${e.passkeyId}`,{headers:this.headers,jwt:n.access_token,noResolveJson:!0});return i?this._returnResult({data:null,error:i}):this._returnResult({data:null,error:null})})}catch(e){if(P(e))return this._returnResult({data:null,error:e});throw e}}};qi.nextInstanceID={};var Ji=qi,Yi=mi,Xi=Ji,Zi=class extends Xi{constructor(e){super(e)}},Qi=class{constructor(e,t,n){this.supabaseUrl=e,this.supabaseKey=t;let r=Un(e);if(!t)throw Error(`supabaseKey is required.`);Nn(t),Vn(n),this.realtimeUrl=new URL(`realtime/v1`,r),this.realtimeUrl.protocol=this.realtimeUrl.protocol.replace(`http`,`ws`),this.authUrl=new URL(`auth/v1`,r),this.storageUrl=new URL(`storage/v1`,r),this.functionsUrl=new URL(`functions/v1`,r);let i=`sb-${r.hostname.split(`.`)[0]}-auth-token`,a={db:yn,realtime:xn,auth:{...bn,storageKey:i},global:vn,tracePropagation:Sn},o=Hn(n??{},a);this.settings=o,this.storageKey=o.auth.storageKey??``,this.headers=o.global.headers??{},o.accessToken?(this.accessToken=o.accessToken,this.auth=new Proxy({},{get:(e,t)=>{throw Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(t)} is not possible`)}})):this.auth=this._initSupabaseAuthClient(o.auth??{},this.headers,o.global.fetch),this.fetch=Pn(t,e,this._getSessionToken.bind(this),o.global.fetch,o.tracePropagation),this.functionsFetch=Pn(t,e,this._getSessionToken.bind(this),o.global.fetch,o.tracePropagation,{omitApiKeyAsBearer:!0}),this.realtime=this._initRealtimeClient({headers:this.headers,accessToken:this._getAccessToken.bind(this),fetch:this.fetch,...o.realtime}),this.accessToken&&Promise.resolve(this.accessToken()).then(e=>this.realtime.setAuth(e)).catch(e=>console.warn(`Failed to set initial Realtime auth token:`,e)),this.rest=new fe(new URL(`rest/v1`,r).href,{headers:this.headers,schema:o.db.schema,fetch:this.fetch,timeout:o.db.timeout,urlLengthLimit:o.db.urlLengthLimit,retry:o.db.retry}),this.storage=new mn(this.storageUrl.href,this.headers,this.fetch,n?.storage),o.accessToken||this._listenForAuthEvents()}get functions(){return new l(this.functionsUrl.href,{headers:this.headers,customFetch:this.functionsFetch})}from(e){return this.rest.from(e)}schema(e){return this.rest.schema(e)}getOpenApiSpec(){return this.rest.getOpenApiSpec()}rpc(e,t={},n={head:!1,get:!1,count:void 0}){return this.rest.rpc(e,t,n)}channel(e,t={config:{}}){return this.realtime.channel(e,t)}getChannels(){return this.realtime.getChannels()}removeChannel(e){return this.realtime.removeChannel(e)}removeAllChannels(){return this.realtime.removeAllChannels()}async _getSessionToken(){if(this.accessToken)return await this.accessToken();let{data:e}=await this.auth.getSession();return e.session?.access_token??null}async _getAccessToken(){return await this._getSessionToken()??this.supabaseKey}_initSupabaseAuthClient({autoRefreshToken:e,persistSession:t,detectSessionInUrl:n,storage:r,userStorage:i,storageKey:a,flowType:o,lock:s,debug:c,throwOnError:l,experimental:u,lockAcquireTimeout:d,skipAutoInitialize:f},p,m){let h={Authorization:`Bearer ${this.supabaseKey}`,apikey:`${this.supabaseKey}`};return new Zi({url:this.authUrl.href,headers:{...h,...p},storageKey:a,autoRefreshToken:e,persistSession:t,detectSessionInUrl:n,storage:r,userStorage:i,flowType:o,lock:s,debug:c,throwOnError:l,experimental:u,fetch:m,lockAcquireTimeout:d,skipAutoInitialize:f,hasCustomAuthorizationHeader:Object.keys(this.headers).some(e=>e.toLowerCase()===`authorization`)})}_initRealtimeClient(e){return new _t(this.realtimeUrl.href,{...e,params:{apikey:this.supabaseKey,...e?.params}})}_listenForAuthEvents(){return this.auth.onAuthStateChange((e,t)=>{this._handleTokenChanged(e,`CLIENT`,t?.access_token)})}_handleTokenChanged(e,t,n){(e===`TOKEN_REFRESHED`||e===`SIGNED_IN`||e===`INITIAL_SESSION`)&&this.changedAccessToken!==n?(this.changedAccessToken=n,this.realtime.setAuth(n)):e===`SIGNED_OUT`&&(this.realtime.setAuth(),t==`STORAGE`&&this.auth.signOut(),this.changedAccessToken=void 0)}};let $i=(e,t,n)=>new Qi(e,t,n);function ea(){if(typeof window<`u`||globalThis.Deno!==void 0)return!1;let e=globalThis.process;if(!e)return!1;let t=e.version;if(t==null)return!1;let n=t.match(/^v(\d+)\./);return n?parseInt(n[1],10)<=20:!1}return ea()&&console.warn(`⚠️  Node.js 20 and below are deprecated and will no longer be supported in future versions of @supabase/supabase-js. Please upgrade to Node.js 22 or later. For more information, visit: https://github.com/orgs/supabase/discussions/45715`),e.AuthAdminApi=Yi,e.AuthApiError=Zn,e.AuthClient=Xi,e.AuthError=Xn,e.AuthImplicitGrantRedirectError=tr,e.AuthInvalidCredentialsError=er,e.AuthInvalidJwtError=fr,e.AuthInvalidTokenResponseError=R,e.AuthPKCECodeVerifierMissingError=ir,e.AuthPKCEGrantCodeExchangeError=rr,e.AuthRefreshDiscardedError=cr,e.AuthRetryableFetchError=or,e.AuthSessionMissingError=L,e.AuthUnknownError=F,e.AuthWeakPasswordError=ur,e.CustomAuthError=I,Object.defineProperty(e,`FunctionRegion`,{enumerable:!0,get:function(){return c}}),e.FunctionsError=i,e.FunctionsFetchError=a,e.FunctionsHttpError=s,e.FunctionsRelayError=o,e.GoTrueAdminApi=mi,e.GoTrueClient=Ji,e.NavigatorLockAcquireTimeoutError=_i,e.PostgrestError=u,e.REALTIME_CHANNEL_STATES=ut,Object.defineProperty(e,`REALTIME_LISTEN_TYPES`,{enumerable:!0,get:function(){return T}}),Object.defineProperty(e,`REALTIME_POSTGRES_CHANGES_LISTEN_EVENT`,{enumerable:!0,get:function(){return lt}}),Object.defineProperty(e,`REALTIME_PRESENCE_LISTEN_EVENTS`,{enumerable:!0,get:function(){return Xe}}),Object.defineProperty(e,`REALTIME_SUBSCRIBE_STATES`,{enumerable:!0,get:function(){return E}}),e.RealtimeChannel=dt,e.RealtimeClient=_t,e.RealtimePostgresFilterBuilder=st,e.RealtimePresence=Ze,e.SIGN_OUT_SCOPES=pi,e.StorageApiError=Pt,e.SupabaseClient=Qi,e.WebSocketFactory=pe,e.createClient=$i,e.isAuthApiError=Qn,e.isAuthError=P,e.isAuthImplicitGrantRedirectError=nr,e.isAuthPKCECodeVerifierMissingError=ar,e.isAuthRefreshDiscardedError=lr,e.isAuthRetryableFetchError=sr,e.isAuthSessionMissingError=$n,e.isAuthWeakPasswordError=dr,e.lockInternals=Z,e.navigatorLock=yi,e.postgresChangesFilter=ct,e.processLock=xi,e})({});
 </script>
+<style id="peopleUi">
+.home-stat[onclick]{ cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .12s ease, border-color .12s ease; }
+.home-stat[onclick]:active{ transform:scale(.97); border-color:rgba(120,200,255,.6); }
+.mark-time{ height:auto !important; min-height:13px; line-height:1.4; }
+</style>
 <script>/* inlined: libs/friday-data.js */
 /* Friday data layer — the ONLY code that talks to Supabase tables.
  *
@@ -1086,7 +1091,6 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       catch (e) { if (e.code === 'inactive') return null; if (e.code === 'auth') return null; throw e; }
     }
     async function signOut() {
-      cardStore(null); cardData = null;
       await unsubscribeAll();
       try { await sb.auth.signOut(); } catch (e) { /* offline logout still clears the local session below */ }
       session = { user: null, profile: null };
@@ -1141,46 +1145,8 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       return s;
     }
 
-    /* ---- card mode: a class QR card (class id + secret key) opens that one class with no login ---- */
-    var CARD_LS = 'friday:card', cardData = null;
-    function cardStored() { try { return JSON.parse(localStorage.getItem(CARD_LS) || 'null'); } catch (e) { return null; } }
-    function cardStore(c) { try { if (c) localStorage.setItem(CARD_LS, JSON.stringify(c)); else localStorage.removeItem(CARD_LS); } catch (e) { /* ignore */ } }
-    async function cardFetch() {
-      var cd = session.card;
-      try {
-        var r = await write(sb.rpc('friday_qr_open', { p_class: cd.classId, p_key: cd.key }), 'qr-open');
-        if (!r || r.ok !== true) throw FridayError('denied', 'invalid card');
-        cardData = r;
-        lsSet(uidKey('card-open'), r);
-        return r;
-      } catch (e) {
-        var ce = classify(e);
-        if (ce.code === 'network') { var c = lsGet(uidKey('card-open')); if (c) { cardData = c; return c; } }
-        throw ce;
-      }
-    }
-    async function openCard(classId, key) {
-      var prev = session;
-      session = { user: { id: 'card-' + classId, email: '' }, profile: { display_name: 'دخول بالكارت', role: 'card', is_active: true }, card: { classId: classId, key: String(key) } };
-      try { await cardFetch(); }
-      catch (e) { session = prev; if (e.code !== 'network') cardStore(null); throw e; }
-      cardStore(null);      // nothing is remembered: the servant scans the card every time
-      return session;
-    }
-    async function cardLoadClasses() {
-      var r = await cardFetch(), cl = r['class'] || {};
-      var kids = (r.children || []).map(function (ch) {
-        return childToUi({ id: ch.id, full_name: ch.full_name, gender: ch.gender, birth_date: ch.birth_date }, {});
-      }).sort(function (a, b) { return String(a.name).localeCompare(String(b.name), 'ar'); });
-      var ui = [{ id: cl.id || session.card.classId, className: cl.name || '', name: cl.name || '', description: cl.description || '', active: true,
-                  qrToken: null, students: kids, servants: [], teacherName: 'دخول بالكارت', _updated: null }];
-      base.classes = snapshotOf(ui);
-      return { classes: ui, fromCache: false };
-    }
-
     async function loadClasses() {
-      if (session.card) return cardLoadClasses();
-      var user = needUser();
+      var user = needUser(); markerCache = null;
       try {
         var rows = await read(sb.from('friday_classes').select(CLASS_COLS).order('name'), 'classes');
         var roster = await read(sb.rpc('friday_my_class_roster'), 'roster');
@@ -1241,7 +1207,6 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
     // Compare the UI classes with what the server last told us and apply only the differences.
     async function saveClasses(ui) {
-      if (session.card) throw FridayError('denied', 'card mode cannot edit classes');
       var user = needUser();
       var b = base.classes, applied = 0;
       var nowIds = {};   // child id -> class id (current UI)
@@ -1345,19 +1310,10 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
     async function loadAttendance(classId) {
       needUser();
-      if (session.card) {
-        var cr = await cardFetch(), catt = {};
-        (cr.attendance || []).forEach(function (r) {
-          if (!r.date) return;
-          (catt[r.date] = catt[r.date] || {})[r.child_id] = { status: r.status, time: cairoTime(r.marked_at), at: r.marked_at };
-        });
-        base.attendance[classId] = clone(catt);
-        return mergeQueue(classId, catt);
-      }
       var rows = [], from = 0, page = 1000;
       try {
         for (;;) {
-          var chunk = await read(sb.from('friday_attendance_records').select('child_id,status,marked_at,friday_attendance_sessions!inner(session_date)')
+          var chunk = await read(sb.from('friday_attendance_records').select('child_id,status,marked_at,marked_by,friday_attendance_sessions!inner(session_date)')
             .eq('class_id', classId).order('marked_at', { ascending: true }).order('id', { ascending: true }).range(from, from + page - 1), 'attendance');
           rows = rows.concat(chunk || []);
           if (!chunk || chunk.length < page) break;
@@ -1374,7 +1330,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       var att = {};
       rows.forEach(function (r) {
         var d = r.friday_attendance_sessions && r.friday_attendance_sessions.session_date; if (!d) return;
-        (att[d] = att[d] || {})[r.child_id] = { status: r.status, time: cairoTime(r.marked_at), at: r.marked_at };
+        (att[d] = att[d] || {})[r.child_id] = { status: r.status, time: cairoTime(r.marked_at), at: r.marked_at, by: r.marked_by || null };
       });
       base.attendance[classId] = clone(att);
       lsSet(uidKey('att:' + classId), att);
@@ -1385,7 +1341,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       loadQueue().forEach(function (op) {
         if (op.classId !== classId) return;
         att[op.date] = att[op.date] || {};
-        if (op.status) att[op.date][op.childId] = { status: op.status, time: cairoTime(op.at), at: op.at, pending: true };
+        if (op.status) att[op.date][op.childId] = { status: op.status, time: cairoTime(op.at), at: op.at, pending: true, by: session.user ? session.user.id : null };
         else delete att[op.date][op.childId];
       });
       return att;
@@ -1433,23 +1389,19 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
             var ops = groups[key], first = ops[0];
             try {
               if (first.status) {
-                var markArgs = { p_class: first.classId, p_date: first.date,
-                  p_marks: ops.map(function (o) { return { child_id: o.childId, status: o.status, marked_at: o.at }; }) };
-                if (session.card) markArgs.p_key = session.card.key;
-                var r = await write(sb.rpc(session.card ? 'friday_qr_mark' : 'friday_mark_attendance', markArgs), 'mark');
+                var r = await write(sb.rpc('friday_mark_attendance', { p_class: first.classId, p_date: first.date,
+                  p_marks: ops.map(function (o) { return { child_id: o.childId, status: o.status, marked_at: o.at }; }) }), 'mark');
                 if (!r || r.ok !== true) throw FridayError('denied', 'mark rejected: ' + (r && r.error));
               } else {
                 for (var i = 0; i < ops.length; i++) {
-                  var clrArgs = { p_class: first.classId, p_date: first.date, p_child: ops[i].childId };
-                  if (session.card) clrArgs.p_key = session.card.key;
-                  var cr = await write(sb.rpc(session.card ? 'friday_qr_clear' : 'friday_clear_attendance', clrArgs), 'clear');
+                  var cr = await write(sb.rpc('friday_clear_attendance', { p_class: first.classId, p_date: first.date, p_child: ops[i].childId }), 'clear');
                   if (!cr || cr.ok !== true) throw FridayError('denied', 'clear rejected');
                 }
               }
               ops.forEach(function (o) { done[o.id] = true; });
               // the server now has these: move the base forward so they are not re-sent
               var bb = base.attendance[first.classId] = base.attendance[first.classId] || {};
-              ops.forEach(function (o) { (bb[o.date] = bb[o.date] || {}); if (o.status) bb[o.date][o.childId] = { status: o.status, time: cairoTime(o.at), at: o.at }; else delete bb[o.date][o.childId]; });
+              ops.forEach(function (o) { (bb[o.date] = bb[o.date] || {}); if (o.status) bb[o.date][o.childId] = { status: o.status, time: cairoTime(o.at), at: o.at, by: session.user ? session.user.id : null }; else delete bb[o.date][o.childId]; });
               result.sent += ops.length;
             } catch (e) {
               var ce = classify(e);
@@ -1537,13 +1489,18 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
     }
 
     /* ---------------------------------------------------------------- settings / self check-in */
+    var markerCache = null;
+    async function markerNames() {
+      if (markerCache) return markerCache;
+      var rows = await read(sb.rpc('friday_marker_names'), 'markers');
+      var o = {}; (rows || []).forEach(function (r) { o[r.user_id] = r.display_name; });
+      markerCache = o; return o;
+    }
     async function loadSettings() {
-      if (session.card) return {};
       var rows = await read(sb.from('friday_app_settings').select('setting_key,setting_value'), 'settings');
       var o = {}; (rows || []).forEach(function (r) { o[r.setting_key] = r.setting_value; }); return o;
     }
     async function saveSetting(key, value) {
-      if (session.card) throw FridayError('denied', 'card mode');
       var u = needUser();
       var r = await write(sb.from('friday_app_settings').upsert({ setting_key: key, setting_value: value, updated_by: u.id }, { onConflict: 'setting_key' }).select('setting_key'), 'setting');
       if (!r || !r.length) throw FridayError('denied', 'not saved'); return true;
@@ -1561,7 +1518,6 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
 
     /* ---------------------------------------------------------------- realtime (RLS-filtered by Supabase) */
     async function subscribe(classIds, handler) {
-      if (session.card) return false;
       await unsubscribeAll();
       if (!sb.channel) return false;
       (classIds || []).forEach(function (cid) {
@@ -1586,7 +1542,7 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
       loadClasses: loadClasses, saveClasses: saveClasses, loadAttendance: loadAttendance, saveAttendance: saveAttendance, flush: flush, pendingCount: pendingCount,
       listServants: listServants, listAdmins: listAdmins, setUserRole: setUserRole, createServantAccount: createServantAccount, linkServantByEmail: linkServantByEmail, setServantActive: setServantActive,
       renameServant: renameServant, assignServant: assignServant, unassignServant: unassignServant, rotateClassToken: rotateClassToken,
-      loadSettings: loadSettings, saveSetting: saveSetting, openCard: openCard, cardStored: cardStored, childToken: childToken, studentCheckin: studentCheckin,
+      markerNames: markerNames, loadSettings: loadSettings, saveSetting: saveSetting, childToken: childToken, studentCheckin: studentCheckin,
       subscribe: subscribe, unsubscribeAll: unsubscribeAll,
       _base: function () { return base; }
     };
@@ -4170,14 +4126,70 @@ function bottomNav(items, active){
       <span class="ico">${navIcon(i.icon)}</span><span>${i.label}</span>
     </button>`).join('')}</nav>`;
 }
+
+/* ---------- who recorded the attendance + tappable stat cards ---------- */
+function myUid(){ return (FD && FD.session().user && FD.session().user.id) || ''; }
+function rosterName(id){ for(const c of classes){ for(const sv of (c.servants || [])) if(sv.id === id) return sv.name; } return ''; }
+async function loadMarkerNames(){
+  window.__markerNames = window.__markerNames || {};
+  try{ Object.assign(window.__markerNames, await FD.markerNames()); }catch(e){ /* migration 09 not applied yet: names fall back to the class roster */ }
+}
+function markerLabel(by){
+  if(!by) return '';
+  if(by === myUid()) return 'بواسطتك';
+  const n = (window.__markerNames || {})[by] || rosterName(by);
+  return n ? 'بواسطة ' + n : 'بواسطة مستخدم آخر';
+}
+function markInfo(m){
+  if(!m) return '';
+  const parts = [];
+  if(m.time) parts.push('وقت التسجيل: ' + m.time);
+  const l = markerLabel(m.by); if(l) parts.push(l);
+  return parts.join(' · ');
+}
+async function openPeopleList(kind, classId){
+  const list = classId ? classes.filter(c => c.id === classId) : classes.filter(c => c.active !== false);
+  const today = sessionDay(), rows = [];
+  for(const c of list){
+    let att = {}; try{ att = await loadAttendanceCached(c.id); }catch(e){}
+    const rec = (att && att[today]) || {};
+    c.students.forEach(st => {
+      const m = normalizeMark(rec[st.id]), status = m ? m.status : null;
+      if(kind === 'present' && status !== 'present') return;
+      if(kind === 'absent' && status !== 'absent') return;
+      rows.push({ c, st, m, status });
+    });
+  }
+  rows.sort((a, b) => (a.st.name || '').localeCompare(b.st.name || '', 'ar'));
+  const title = kind === 'present' ? '✅ الحاضرين النهاردة' : kind === 'absent' ? '❌ الغايبين النهاردة' : '👥 كل المخدومين';
+  const multi = list.length > 1;
+  const tag = r => r.status === 'present' ? '<span style="color:var(--good);">حاضر</span>' : r.status === 'absent' ? '<span style="color:var(--bad);">غايب</span>' : '<span style="color:#7B8194;">لسه متسجّلش</span>';
+  const old = document.getElementById('peopleModal'); if(old) old.remove();
+  const bg = document.createElement('div'); bg.className = 'modal-bg'; bg.id = 'peopleModal';
+  bg.innerHTML = `<div class="modal" style="max-width:440px;text-align:start;max-height:90vh;overflow-y:auto;">
+    <div style="font-weight:900;font-size:17px;">${title} <span style="color:#7B8194;font-weight:700;">(${rows.length})</span></div>
+    ${rows.length > 6 ? '<div class="field" style="margin-top:10px;"><input type="search" id="peopleSearch" placeholder="🔍 بحث بالاسم"></div>' : ''}
+    <div id="peopleRows" style="margin:10px 0;">${rows.map(r => `
+      <button type="button" class="mem-card" data-name="${escapeHtml((r.st.name || '').toLowerCase())}" onclick="document.getElementById('peopleModal').remove();openStudentProfile('${r.c.id}','${r.st.id}')">
+        ${avatarHtml(r.st)}
+        <span class="mem-info"><span class="mem-name">${escapeHtml(r.st.name)}</span>
+          <span class="mem-sub">${multi ? escapeHtml(r.c.className) + ' · ' : ''}${tag(r)}${r.m && r.m.time ? ' · ' + r.m.time : ''}${r.m && r.m.by ? ' · ' + escapeHtml(markerLabel(r.m.by)) : ''}</span></span>
+        <span class="mem-arrow">‹</span>
+      </button>`).join('') || '<div class="empty">مفيش حد هنا.</div>'}</div>
+    <button class="btn btn-line" style="width:100%;" onclick="document.getElementById('peopleModal').remove()">إغلاق</button></div>`;
+  document.body.appendChild(bg);
+  const q = bg.querySelector('#peopleSearch');
+  if(q) q.oninput = () => { const v = q.value.trim().toLowerCase(); bg.querySelectorAll('#peopleRows .mem-card').forEach(b => { b.style.display = !v || b.dataset.name.includes(v) ? '' : 'none'; }); };
+}
 function fillServantHome(c, att){
+  { const sa = document.getElementById('svAlerts'); if(sa){ sa.innerHTML = alertsHtml(c, att, 'home'); const ha = document.querySelector('.home-att'); if(ha && ha.parentNode && sa.nextElementSibling !== ha) ha.parentNode.insertBefore(sa, ha); } }
   const $ = id => document.getElementById(id); if(!$('hsA')) return;
   const prof = (FD && FD.session().profile) || {};
   const email = (FD && FD.session().user && FD.session().user.email) || '';
   const name = adminUnlocked ? email : (prof.display_name || email);
   $('homeName').textContent = name; $('homeAv').textContent = (String(name).trim().charAt(0) || '؟').toUpperCase();
   $('homeRole').textContent = (adminUnlocked ? 'مدير النظام' : 'خادم') + ' · ' + c.className;
-  const rec = (att && att[todayStr()]) || {}; let pr = 0, ab = 0;
+  const rec = (att && att[sessionDay()]) || {}; let pr = 0, ab = 0;
   c.students.forEach(st => { const m = normalizeMark(rec[st.id]); if(!m) return; if(m.status === 'absent') ab++; else if(m.status === 'present' || m.status === 'late') pr++; });
   $('hsA').textContent = c.students.length; $('hsB').textContent = pr; $('hsC').textContent = ab;
   const counted = pr + ab, pct = counted ? Math.round(pr / counted * 100) : null;
@@ -4189,6 +4201,7 @@ function fillServantHome(c, att){
 function setTab(id, noScroll){
   document.querySelectorAll('[data-tab]').forEach(el => el.classList.toggle('tab-hidden', el.dataset.tab !== id));
   if(id === 'home' && typeof window.__refreshServantHome === 'function' && document.getElementById('hsA')) window.__refreshServantHome();
+  if(id === 'home' && document.getElementById('adminAlerts')){ const aa = document.getElementById('adminAlerts'), ha = document.querySelector('.home-att'); if(ha && ha.parentNode && aa.nextElementSibling !== ha) ha.parentNode.insertBefore(aa, ha); fillAdminAlerts(); }
   document.querySelectorAll('.bottom-nav .nav-item[data-nav]').forEach(b => b.classList.toggle('active', b.dataset.nav === id));
   if(!noScroll){
     try{ window.scrollTo({top:0, behavior:'smooth'}); }catch(e){}
@@ -4230,6 +4243,33 @@ function todayStr(){
   }
 }
 function daysInMonth(y, m){ return new Date(Date.UTC(y, m, 0)).getUTCDate(); }
+
+/* ---------------- attendance is taken on Fridays only (4 or 5 sessions a month) ---------------- */
+const SESSION_WEEKDAY = 5;                    // JS getUTCDay(): 0 = Sunday ... 5 = Friday
+function _isoParts(iso){ const [y, m, d] = String(iso).split('-').map(Number); return { y, m, d }; }
+function _isoFromUtc(ms){ const x = new Date(ms); return `${x.getUTCFullYear()}-${String(x.getUTCMonth()+1).padStart(2,'0')}-${String(x.getUTCDate()).padStart(2,'0')}`; }
+function isSessionDay(iso){ const q = _isoParts(iso); return new Date(Date.UTC(q.y, q.m-1, q.d)).getUTCDay() === SESSION_WEEKDAY; }
+function sessionDayOnOrBefore(iso){
+  const q = _isoParts(iso), ms = Date.UTC(q.y, q.m-1, q.d), back = (new Date(ms).getUTCDay() - SESSION_WEEKDAY + 7) % 7;
+  return _isoFromUtc(ms - back * 86400000);
+}
+function sessionDay(){ return sessionDayOnOrBefore(todayStr()); }       // today if it is Friday, else the last Friday
+function fridaysOfMonth(ym){                                           // 'YYYY-MM' -> every Friday up to today
+  const [y, m] = ym.split('-').map(Number), out = [], last = todayStr();
+  for(let d = 1; d <= daysInMonth(y, m); d++){
+    const iso = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if(iso > last) break;
+    if(isSessionDay(iso)) out.push(iso);
+  }
+  return out;
+}
+function shiftFriday(classId, delta){
+  const c = classes.find(x => x.id === classId); if(!c) return;
+  const cur = sessionDayOnOrBefore(window.__viewDate || sessionDay()), q = _isoParts(cur);
+  let next = _isoFromUtc(Date.UTC(q.y, q.m-1, q.d) + delta * 7 * 86400000);
+  if(next > sessionDay()) return;               // no future Fridays
+  renderTeacherDashboard(c, next);
+}
 function parseIso(s){
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||''));
   if(!m) return null;
@@ -4468,8 +4508,9 @@ async function exportMonthlyReport(){
   let anyData = false;
   for(const c of classes){
     const att = await loadAttendance(c.id);
-    const dates = Object.keys(att).filter(d => d.startsWith(month)).sort();
-    if(dates.length) anyData = true;
+    const recorded = Object.keys(att).filter(d => d.startsWith(month));
+    const dates = Array.from(new Set(fridaysOfMonth(month).concat(recorded))).sort();
+    if(recorded.length) anyData = true;
     let P=0, L=0, A=0, E=0;
     const rows = [['الاسم','النوع','العمر', ...dates, 'حاضر','غايب','النسبة %']];
     c.students.forEach(st => {
@@ -4594,7 +4635,7 @@ function localizeSheet(h){
 async function printClassSheet(classId){
   const c = classes.find(x=>x.id===classId);
   const attendance = await loadAttendance(classId);
-  const today = todayStr();
+  const today = sessionDay();
   const todayRec = attendance[today] || {};
 
   const rows = c.students.map(s=>{
@@ -4696,6 +4737,224 @@ async function importBackupFile(event){
   event.target.value = '';
 }
 
+/* ---------------- Scheduled reminders (local notifications, Android app only) ----------------
+   Uses @capacitor/local-notifications: the schedule lives in Android's AlarmManager, so the
+   notification fires at the chosen time even when the app is closed (and survives a reboot).
+   weekday numbering in the plugin: 1 = Sunday ... 6 = Friday ... 7 = Saturday.
+   The admin sets ONE Friday time + message for all servants (stored in friday_app_settings under
+   the key 'friday_reminder'). Every servant device downloads it when the app is opened and
+   schedules the notification locally. A servant can still switch it off for their own phone. */
+const REM_CHANNEL = 'attendance-reminders';
+// Sounds for the reminder notification. Android fixes a notification's sound per channel, so every sound
+// has its own channel (attendance-reminders-<key>). The .wav files live in android/app/src/main/res/raw.
+const REM_SOUNDS = {
+  default: { label:'صوت النظام الافتراضي' },
+  bell:    { label:'🔔 جرس',      file:'rem_bell' },
+  chime:   { label:'🎐 رنين',      file:'rem_chime' },
+  ding:    { label:'✨ دينج',      file:'rem_ding' },
+  harp:    { label:'🎵 قيثارة',    file:'rem_harp' },
+  marimba: { label:'🥁 ماريمبا',   file:'rem_marimba' },
+  soft:    { label:'🌙 ناعم',      file:'rem_soft' },
+  silent:  { label:'🔕 بدون صوت' }
+};
+function remSoundKey(){ let k = 'default'; try{ k = localStorage.getItem('rem-sound') || 'default'; }catch(e){} return REM_SOUNDS[k] ? k : 'default'; }
+function remChannelId(key){ key = key || remSoundKey(); return key === 'default' ? REM_CHANNEL : REM_CHANNEL + '-' + key; }
+function remSoundSelectHtml(){
+  const cur = remSoundKey();
+  return `<div class="set-lbl" style="margin-top:10px;">🔊 صوت الإشعار</div>
+    <select id="remSound" onchange="remPreviewSound(this.value)" style="width:100%;">${Object.entries(REM_SOUNDS).map(([k,v]) => `<option value="${k}" ${k===cur?'selected':''}>${v.label}</option>`).join('')}</select>`;
+}
+let _remAudio = null;
+function remPreviewSound(key){
+  try{
+    const f = REM_SOUNDS[key] && REM_SOUNDS[key].file; if(!f) return;
+    if(_remAudio){ _remAudio.pause(); }
+    _remAudio = new Audio('sounds/' + f + '.wav'); _remAudio.play().catch(() => {});
+  }catch(e){}
+}
+function remSaveSound(){
+  const el = document.getElementById('remSound');
+  if(el) try{ localStorage.setItem('rem-sound', el.value); }catch(e){}
+}
+const REM_ID_BASE = 7100;   // ids 7101..7107, one per weekday
+const REM_TEST_ID = 7099;
+const REM_SETTING_KEY = 'friday_reminder';
+const REM_DAYS = [['1','الأحد'],['2','الاثنين'],['3','الثلاثاء'],['4','الأربعاء'],['5','الخميس'],['6','الجمعة'],['7','السبت']];
+const REM_DEFAULT = { on:true, v:2, days:['6'], time:'09:00', text:'متنساش تسجّل حضور النهارده 📋' };
+
+function remGet(){        // this phone's own settings
+  try{ const r = JSON.parse(localStorage.getItem('rem-cfg') || 'null'); if(r && Array.isArray(r.days)) return Object.assign({}, REM_DEFAULT, r); }catch(e){}
+  return Object.assign({}, REM_DEFAULT);
+}
+function remRemote(){     // the admin's settings for all servants (last copy downloaded), or null
+  try{ const r = JSON.parse(localStorage.getItem('rem-remote') || 'null'); if(r && typeof r === 'object') return r; }catch(e){}
+  return null;
+}
+function remEffective(){  // what is actually scheduled on this phone
+  const local = remGet(), rr = remRemote();
+  if(!rr) return local;
+  return { on: !!rr.on && local.on, v:2, days:['6'], time: rr.time || REM_DEFAULT.time, text: rr.text || REM_DEFAULT.text };
+}
+function remEsc(v){ return String(v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function remSectionHtml(){
+  const rr = remRemote(), c = remGet();
+  let html = '';
+  if(typeof adminUnlocked !== 'undefined' && adminUnlocked){
+    const a = rr || { on:true, time:REM_DEFAULT.time, text:REM_DEFAULT.text };
+    html += `<div class="set-sec">
+      <div class="set-lbl">📣 تذكير كل الخدام (يوم الجمعة)</div>
+      <label class="set-row"><span>ابعت التذكير للخدام</span><input type="checkbox" id="remAdmOn" ${a.on?'checked':''}></label>
+      <div class="set-lbl" style="margin-top:10px;">الساعة</div>
+      <input type="time" id="remAdmTime" value="${remEsc(a.time || REM_DEFAULT.time)}" style="width:100%;">
+      <div class="set-lbl" style="margin-top:10px;">نص الإشعار</div>
+      <input type="text" id="remAdmText" value="${remEsc(a.text || REM_DEFAULT.text)}" style="width:100%;">
+      <div style="font-size:11px;opacity:.7;margin-top:6px;">الإشعار بيوصل لتليفون كل خادم أول ما يفتح التطبيق بعد التغيير، وبعدها بيطلع لوحده كل جمعة.</div>
+    </div>`;
+  }
+  if(!IS_NATIVE_APP){
+    return html + `<div class="set-sec"><div class="set-lbl">⏰ تذكير بميعاد محدد</div>
+      <div style="font-size:12px;opacity:.75;">الإشعارات المجدولة شغالة جوه تطبيق الأندرويد بس.</div></div>`;
+  }
+  if(rr){
+    const when = 'الجمعة ' + (rr.time || REM_DEFAULT.time);
+    return html + `<div class="set-sec">
+      <div class="set-lbl">⏰ تذكير الجمعة</div>
+      <label class="set-row"><span>استلم التذكير على التليفون ده</span><input type="checkbox" id="remOn" ${c.on?'checked':''}></label>
+      <div style="font-size:12px;opacity:.75;margin-top:6px;">${rr.on ? 'الميعاد محدد من المسؤول: ' + when : 'المسؤول موقّف التذكير حاليًا.'}</div>
+      ${remSoundSelectHtml()}
+      <button type="button" class="btn btn-line" style="width:100%;margin-top:10px;" onclick="remTest()">🔔 جرّب إشعار بعد 5 ثواني</button>
+    </div>`;
+  }
+  const chips = REM_DAYS.map(([v,l]) => `<label style="display:inline-flex;align-items:center;gap:4px;margin:3px 8px 3px 0;font-size:13px;"><input type="checkbox" class="remDay" value="${v}" ${c.days.includes(v)?'checked':''}>${l}</label>`).join('');
+  return html + `<div class="set-sec">
+    <div class="set-lbl">⏰ تذكير بميعاد محدد</div>
+    <label class="set-row"><span>فعّل التذكير</span><input type="checkbox" id="remOn" ${c.on?'checked':''}></label>
+    <div class="set-lbl" style="margin-top:10px;">الأيام</div>
+    <div>${chips}</div>
+    <div class="set-lbl" style="margin-top:10px;">الساعة</div>
+    <input type="time" id="remTime" value="${remEsc(c.time)}" style="width:100%;">
+    <div class="set-lbl" style="margin-top:10px;">نص الإشعار</div>
+    <input type="text" id="remText" value="${remEsc(c.text)}" style="width:100%;">
+    ${remSoundSelectHtml()}
+    <button type="button" class="btn btn-line" style="width:100%;margin-top:10px;" onclick="remTest()">🔔 جرّب إشعار بعد 5 ثواني</button>
+  </div>`;
+}
+function remReadModal(){  // this phone's own settings from the modal
+  const on = document.getElementById('remOn');
+  if(!on) return null;
+  const prev = remGet();
+  if(!document.getElementById('remTime')){          // admin-managed mode: only the personal on/off switch
+    return Object.assign({}, prev, { on: on.checked });
+  }
+  const days = Array.from(document.querySelectorAll('.remDay')).filter(x => x.checked).map(x => x.value);
+  return {
+    on: on.checked && days.length > 0, v:2, days,
+    time: document.getElementById('remTime').value || REM_DEFAULT.time,
+    text: (document.getElementById('remText').value || '').trim() || REM_DEFAULT.text
+  };
+}
+async function remEnsureChannel(key){
+  const LN = nativePlugin('LocalNotifications'), snd = REM_SOUNDS[key] || REM_SOUNDS.default;
+  const ch = { id: remChannelId(key), name: 'تذكيرات الحضور - ' + snd.label.replace(/^[^\u0600-\u06FF]+/, ''),
+               description: 'تذكير بميعاد تسجيل الحضور', importance: key === 'silent' ? 2 : 4, visibility: 1, vibration: key !== 'silent' };
+  if(snd.file) ch.sound = snd.file + '.wav';
+  await LN.createChannel(ch);
+}
+async function remEnsurePermission(ask, key){
+  const LN = nativePlugin('LocalNotifications');
+  let perm = await LN.checkPermissions();
+  if(perm.display !== 'granted' && ask) perm = await LN.requestPermissions();
+  if(perm.display !== 'granted') return false;
+  await remEnsureChannel(key || remSoundKey());
+  return true;
+}
+async function remApply(cfg, ask){
+  const LN = nativePlugin('LocalNotifications');
+  await LN.cancel({ notifications: REM_DAYS.map(d => ({ id: REM_ID_BASE + Number(d[0]) })) });
+  if(!cfg.on) return true;
+  if(!(await remEnsurePermission(ask))) return false;
+  const [h, m] = cfg.time.split(':').map(Number);
+  await LN.schedule({ notifications: cfg.days.map(d => ({
+    id: REM_ID_BASE + Number(d),
+    title: 'حضور الأحد',
+    body: cfg.text,
+    channelId: remChannelId(),
+    schedule: { on: { weekday: Number(d), hour: h, minute: m }, allowWhileIdle: true }
+  })) });
+  return true;
+}
+async function remPersist(cfg){
+  try{ localStorage.setItem('rem-cfg', JSON.stringify(cfg)); }catch(e){}
+  if(!IS_NATIVE_APP) return;
+  try{
+    const ok = await remApply(remEffective(), true);
+    if(!ok) alert('لازم تسمح بالإشعارات للتطبيق من إعدادات الموبايل علشان التذكير يشتغل.');
+  }catch(e){
+    console.error('reminder schedule failed', e);
+    alert('تعذر ضبط التذكير: ' + ((e && e.message) || e));
+  }
+}
+// Admin: publish the Friday time + message for every servant.
+async function remAdminSave(){
+  const on = document.getElementById('remAdmOn');
+  if(!on) return;                                   // not the admin screen
+  const val = {
+    on: on.checked, days: ['6'],
+    time: document.getElementById('remAdmTime').value || REM_DEFAULT.time,
+    text: (document.getElementById('remAdmText').value || '').trim() || REM_DEFAULT.text
+  };
+  try{
+    await FD.saveSetting(REM_SETTING_KEY, JSON.stringify(val));
+    try{ localStorage.setItem('rem-remote', JSON.stringify(val)); }catch(e){}
+    if(IS_NATIVE_APP) await remApply(remEffective(), true);
+  }catch(e){
+    console.error('reminder publish failed', e);
+    alert('تعذر حفظ تذكير الخدام: ' + ((e && e.message) || e));
+  }
+}
+// Download the admin's reminder (called after sign-in) and re-schedule if it changed. Silent on failure.
+async function remPullAndApply(){
+  if(!IS_NATIVE_APP || typeof FD === 'undefined' || !FD) return;
+  try{
+    const st = await FD.loadSettings();
+    let v = st && st[REM_SETTING_KEY];
+    if(typeof v === 'string'){ try{ v = JSON.parse(v); }catch(e){ v = null; } }
+    if(v && typeof v === 'object'){ try{ localStorage.setItem('rem-remote', JSON.stringify(v)); }catch(e){} }
+    await remApply(remEffective(), false);
+  }catch(e){ console.warn('reminder pull skipped', e && e.message); }
+}
+async function remTest(){
+  try{
+    const sel = document.getElementById('remSound'), key = (sel && sel.value) || remSoundKey();
+    if(!(await remEnsurePermission(true, key))){ alert('اسمح بالإشعارات للتطبيق الأول.'); return; }
+    const txt = (document.getElementById('remText') || {}).value || remEffective().text;
+    await nativePlugin('LocalNotifications').schedule({ notifications: [{
+      id: REM_TEST_ID, title: 'حضور الأحد', body: txt, channelId: remChannelId(key),
+      schedule: { at: new Date(Date.now() + 5000), allowWhileIdle: true }
+    }] });
+  }catch(e){ alert('تعذر إرسال الإشعار التجريبي: ' + ((e && e.message) || e)); }
+}
+// Launch: first run turns the reminder on by itself (asks permission once); later runs re-apply silently.
+async function remResync(){
+  try{
+    let first = false;
+    try{ first = localStorage.getItem('rem-cfg') === null; }catch(e){}
+    const c = remGet();
+    if(!first && c.v !== 2){            // v9 auto-default was Sunday; the service is on Friday now
+      if(c.days.length === 1 && c.days[0] === '1') c.days = ['6'];
+      c.v = 2; try{ localStorage.setItem('rem-cfg', JSON.stringify(c)); }catch(e){}
+    }
+    if(first){
+      try{ localStorage.setItem('rem-cfg', JSON.stringify(c)); }catch(e){}
+      await new Promise(r => setTimeout(r, 1500));
+      await remApply(remEffective(), true);
+    } else if(c.on){
+      await remApply(remEffective(), false);
+    }
+  }catch(e){ console.warn('reminder resync skipped', e && e.message); }
+}
+
 /* ---------------- PWA (best-effort) ----------------
    This is a single self-contained HTML file with no separate server, so
    the manifest and service worker are generated in-memory (as Blob URLs)
@@ -4718,7 +4977,7 @@ function setupManifestAndIcons(){
   document.getElementById('appleIconLink').href = APP_ICON_DATAURI;
   const manifest = {
     name: 'سجل حضور مدارس الأحد',
-    short_name: 'Friday',
+    short_name: 'حضور الأحد',
     start_url: location.pathname + location.search,
     display: 'standalone',
     background_color: '#F8F6F0',
@@ -4805,6 +5064,46 @@ function promptInstallApp(){
 }
 
 
+/* ---------------- font size (Settings → مقاس الخط) ----------------
+   The app's sizes are fixed px values (in the stylesheets and in inline styles), so the scale is applied
+   by multiplying those px values; originals are remembered so changing the scale never compounds. */
+const FS_SCALES = { s:.9, m:1, l:1.15, xl:1.3 };
+function fsKey(){ let k = 'm'; try{ k = localStorage.getItem('fontScale') || 'm'; }catch(e){} return FS_SCALES[k] ? k : 'm'; }
+const _fsRuleOrig = new WeakMap();
+let _fsFactor = 1, _fsObserver = null;
+function _fsWalk(rules, f){
+  for(const r of Array.from(rules || [])){
+    if(r.cssRules && !r.style){ try{ _fsWalk(r.cssRules, f); }catch(e){} continue; }       // @media / @supports
+    if(!r.style || !r.style.fontSize) continue;
+    let o = _fsRuleOrig.get(r);
+    if(o === undefined){ const m = /^([\d.]+)px$/.exec(r.style.fontSize); if(!m) continue; o = parseFloat(m[1]); _fsRuleOrig.set(r, o); }
+    r.style.fontSize = (Math.round(o * f * 100) / 100) + 'px';
+  }
+}
+function _fsInline(root, f){
+  if(!root || root.nodeType !== 1) return;
+  const list = [root].concat(Array.from(root.querySelectorAll('[style*="font-size"]')));
+  for(const el of list){
+    if(!el.style || !el.getAttribute('style') || el.getAttribute('style').indexOf('font-size') < 0) continue;
+    let o = el.dataset ? parseFloat(el.dataset.fs0) : NaN;
+    if(isNaN(o)){ const m = /^([\d.]+)px$/.exec(el.style.fontSize); if(!m) continue; o = parseFloat(m[1]); el.dataset.fs0 = o; }
+    el.style.fontSize = (Math.round(o * f * 100) / 100) + 'px';
+  }
+}
+function applyFontScale(key){
+  const f = FS_SCALES[key] || 1; _fsFactor = f;
+  document.documentElement.style.fontSize = (16 * f) + 'px';
+  for(const sh of Array.from(document.styleSheets)){ try{ _fsWalk(sh.cssRules, f); }catch(e){} }   // cross-origin sheets throw: skip
+  if(document.body) _fsInline(document.body, f);
+  if(!_fsObserver && document.body){
+    _fsObserver = new MutationObserver(muts => {
+      if(_fsFactor === 1) return;
+      for(const m of muts) m.addedNodes.forEach(n => _fsInline(n, _fsFactor));
+    });
+    _fsObserver.observe(document.body, { childList:true, subtree:true });
+  }
+}
+
 function savedTheme(){ let t='dark'; try{ t = localStorage.getItem('theme2') || 'dark'; }catch(e){} return t==='light' ? 'light' : 'dark'; }
 function applyTheme(th){
   th = th==='light' ? 'light' : 'dark';
@@ -4833,11 +5132,12 @@ function initTheme(){
     document.body.appendChild(settingsBtn);
   }
 }
-function closeSettings(){ const m=document.getElementById('settingsModal'); if(m) m.remove(); applyTheme(savedTheme()); }
+function closeSettings(){ const m=document.getElementById('settingsModal'); if(m) m.remove(); applyTheme(savedTheme()); applyFontScale(fsKey()); }
 function setSetSeg(sel, val, btn){
   const el=document.getElementById(sel); if(el) el.value = val;
   btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b===btn));
   if(sel==='themeSelect') applyTheme(val);
+  if(sel==='fontSelect') applyFontScale(val);
 }
 function openSettingsModal(){
   if(document.getElementById('settingsModal')) return;
@@ -4859,6 +5159,9 @@ function openSettingsModal(){
         <div class="set-lbl" style="margin-top:14px;">🌐 ${t('language')}</div>
         <select id="langSelect" style="display:none"><option value="ar" ${currentLang==='ar'?'selected':''}>العربية</option><option value="en" ${currentLang==='en'?'selected':''}>English</option></select>
         ${seg('langSelect', [['ar','العربية'],['en','English']], currentLang==='en'?'en':'ar')}
+        <div class="set-lbl" style="margin-top:14px;">🔠 مقاس الخط</div>
+        <select id="fontSelect" style="display:none">${[['s','صغير'],['m','وسط'],['l','كبير'],['xl','كبير جدًا']].map(([v,l]) => `<option value="${v}" ${fsKey()===v?'selected':''}>${l}</option>`).join('')}</select>
+        ${seg('fontSelect', [['s','صغير'],['m','وسط'],['l','كبير'],['xl','كبير جدًا']], fsKey())}
         ${document.getElementById('loginBg') ? `<div class="set-lbl" style="margin-top:14px;">🖼️ صورة خلفية شاشة الدخول (على الجهاز ده)</div>
         <div style="display:flex;gap:8px;"><button class="btn btn-line" style="flex:1;" onclick="pickLoginBg()">اختيار صورة</button><button class="btn btn-line" style="flex:1;" onclick="clearLoginBg()">إزالة</button></div>` : ''}
       </div>
@@ -4873,6 +5176,8 @@ function openSettingsModal(){
         <select id="fxAbsentSound" onchange="playConfirmSound('absent',this.value,true)">${Object.entries(ABSENT_SOUNDS).map(([k,v]) => `<option value="${k}" ${soundChoice('absent')===k?'selected':''}>${v.label}</option>`).join('')}</select>
       </div>
 
+      ${remSectionHtml()}
+
       <button type="button" class="btn btn-accent" style="width:100%;" onclick="saveSettings()">${t('save')}</button>
       <button type="button" class="btn btn-line" style="width:100%;margin-top:10px;" onclick="closeSettings()">${t('close')}</button>
       ${document.getElementById('loginBg') ? '' : `<button type="button" class="btn btn-line" style="width:100%;margin-top:10px;color:var(--bad);" onclick="closeSettings();closeQrScanner();renderLogin()">🚪 ${t('nav_exit')}</button>`}
@@ -4883,8 +5188,13 @@ function saveSettings(){
   const th = document.getElementById('themeSelect').value;
   try{ localStorage.setItem('theme2', th); }catch(e){}
   applyTheme(th);
+  try{ localStorage.setItem('fontScale', document.getElementById('fontSelect').value); }catch(e){}
+  applyFontScale(fsKey());
   setFxPref('sound', document.getElementById('fxSound').checked);
   setFxPref('vibrate', document.getElementById('fxVibrate').checked);
+  const remCfg = remReadModal();      // read the modal now; it is closed below
+  remSaveSound();
+  remAdminSave().finally(() => { if(remCfg) remPersist(remCfg); });
   try{ localStorage.setItem('fx-present-sound', document.getElementById('fxPresentSound').value); localStorage.setItem('fx-absent-sound', document.getElementById('fxAbsentSound').value); }catch(e){}
   const lang = document.getElementById('langSelect').value;
   if(lang !== currentLang){ setAppLanguage(lang); return; }
@@ -5165,13 +5475,13 @@ async function loadAttendanceCached(classId){
 }
 function invalidateAttendanceCache(classId){ delete attendanceCache[classId]; }
 
-/* ---------- QR helpers (the class card carries the class id + its secret key `k`, so scanning opens the class with no login; a student card carries a per-child token) ---------- */
+/* ---------- QR helpers (links carry NO secret any more: opening a class needs a login; a student card carries a per-child token) ---------- */
 async function ensureQrKey(classId){
   const c = classes.find(x => x.id === classId);
   if(!c || !c.qrToken){ alert('مش قادر أجهّز الكود — حدّث الصفحة وجرّب تاني'); return false; }
   return true;
 }
-function teacherKeyParam(classId){ const c = classes.find(x => x.id === classId); return c && c.qrToken ? '&k=' + encodeURIComponent(c.qrToken) : ''; }
+function teacherKeyParam(){ return ''; }
 async function studentTokenParam(classId, studentId){
   const c = classes.find(x => x.id === classId);
   return '&t=' + await FD.childToken(c.qrToken, studentId);
@@ -5208,6 +5518,8 @@ function isAdminUser(){ return !!(FD && FD.isAdmin()); }
 
 async function enterApp(){
   await loadClasses();
+  remPullAndApply();
+  await loadMarkerNames();
   adminUnlocked = isAdminUser();
   startRealtime();
   flushPending();
@@ -5421,7 +5733,7 @@ function calcStats(attendance, studentId){
 // Counts how many of a student's most recent marked days were "absent",
 // stopping at the first non-absent day. Used for the repeated-absence flag.
 /* ---------------- alerts: follow-up (3+ missed sessions in a row) and upcoming birthdays ---------------- */
-const FOLLOWUP_MIN = 3, BIRTHDAY_DAYS = 7;
+const FOLLOWUP_MIN = 2, BIRTHDAY_DAYS = 7;
 function lastPresentDate(att, sid){
   for(const d of Object.keys(att).sort().reverse()){
     const m = normalizeMark((att[d]||{})[sid]);
@@ -5461,7 +5773,7 @@ function alertsHtml(c, att, tabAttr, withClass){
   if(fu.length){
     out += `<div class="card alert-card"${ta} style="border-inline-start:5px solid var(--bad);">
       <label>🚨 محتاجين افتقاد <span class="alert-count">${fu.length}</span></label>
-      <div class="sub" style="margin-bottom:6px;">غابوا ${FOLLOWUP_MIN} مرات ورا بعض أو أكتر</div>
+      <div class="sub" style="margin-bottom:6px;">غابوا أسبوعين ورا بعض أو أكتر · أول ما يتسجّل حضورهم بيشيلوا من القايمة</div>
       ${fu.map(x => `
         <div class="alert-row" onclick="openStudentProfile('${c.id}','${x.st.id}')">
           ${avatarHtml(x.st)}
@@ -5532,9 +5844,13 @@ function renderAdmin(){
       <div class="home-who"><div class="home-hi">مرحباً</div><div class="home-name" id="homeName" dir="auto"></div><div class="home-role">مدير النظام</div></div>
     </div>
     <div class="home-stats" data-tab="home">
-      <div class="home-stat"><div class="hs-ico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div><div class="hs-n" id="hsClasses">0</div><div class="hs-l">الفصول</div></div>
-      <div class="home-stat"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c2 .7 3 2.6 3 6"/></svg></div><div class="hs-n" id="hsServants">0</div><div class="hs-l">الخدام</div></div>
-      <div class="home-stat"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></div><div class="hs-n" id="hsStudents">0</div><div class="hs-l">المخدومين</div></div>
+      <div class="home-stat" role="button" tabindex="0" onclick="setTab('classes')"><div class="hs-ico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div><div class="hs-n" id="hsClasses">0</div><div class="hs-l">الفصول</div></div>
+      <div class="home-stat" role="button" tabindex="0" onclick="openServantsManager()"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c2 .7 3 2.6 3 6"/></svg></div><div class="hs-n" id="hsServants">0</div><div class="hs-l">الخدام</div></div>
+      <div class="home-stat" role="button" tabindex="0" onclick="openPeopleList('all')"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></div><div class="hs-n" id="hsStudents">0</div><div class="hs-l">المخدومين</div></div>
+    </div>
+    <div class="home-stats" data-tab="home" style="grid-template-columns:repeat(2,minmax(0,1fr));">
+      <div class="home-stat" role="button" tabindex="0" onclick="openPeopleList('present')"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></div><div class="hs-n" id="hsPresent">0</div><div class="hs-l">حاضر النهاردة</div></div>
+      <div class="home-stat" role="button" tabindex="0" onclick="openPeopleList('absent')"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div><div class="hs-n" id="hsAbsent">0</div><div class="hs-l">غايب النهاردة</div></div>
     </div>
     <div class="card home-att" data-tab="home">
       <label>حضور النهاردة</label>
@@ -5566,7 +5882,7 @@ function renderAdmin(){
     </div>
     <div id="memList" data-tab="members"></div>
 
-    <div id="adminAlerts" data-tab="classes"></div>
+    <div id="adminAlerts" data-tab="home"></div>
 
     <div class="card" data-tab="add">
       <label>إضافة فصل جديد</label>
@@ -5674,7 +5990,7 @@ async function fillHomeDash(){
   classes.forEach(c => { normalizeClass(c); students += c.students.length; c.servants.forEach(v => { const k = (v.email || v.name || '').toLowerCase(); if(k) servants.add(k); }); });
   $('hsClasses').textContent = classes.length; $('hsServants').textContent = servants.size; $('hsStudents').textContent = students;
   let pr = 0, lt = 0, ab = 0;
-  const today = todayStr();
+  const today = sessionDay();
   for(const c of classes){
     if(c.active === false) continue;
     let att = {};
@@ -5686,7 +6002,7 @@ async function fillHomeDash(){
   const counted = pr + lt + ab, pct = counted ? Math.round((pr + lt) / counted * 100) : null;
   $('donutPct').textContent = pct === null ? '—' : pct + '%';
   $('donutVal').setAttribute('stroke-dasharray', (pct === null ? 0 : pct / 100 * 314.16) + ' 314.16');
-  $('lgPresent').textContent = pr + lt; $('lgAbsent').textContent = ab;   // the app only has present/absent; legacy 'late' already reads as present
+  $('lgPresent').textContent = pr + lt; $('lgAbsent').textContent = ab; if($('hsPresent')) $('hsPresent').textContent = pr + lt; if($('hsAbsent')) $('hsAbsent').textContent = ab;   // the app only has present/absent; legacy 'late' already reads as present
   $('homeAttNote').textContent = counted ? '' : 'لسه محدش اتسجّل النهاردة';
 }
 function renderMembersList(){
@@ -5785,13 +6101,13 @@ function colorFromName(name){
 function avatarHtml(student){
   const bg = colorFromName(student.name);
   if(student.photo){
-    return `<div class="avatar" style="background:${bg};"><img src="${student.photo}" alt="" loading="lazy" data-i="${escapeHtml((student.name||'؟').trim().charAt(0))}" onerror="this.parentNode.textContent=this.dataset.i"></div>`;
+    return `<div class="avatar" style="background:${bg};cursor:zoom-in;" onclick="event.stopPropagation();openPhotoPreview(this.querySelector('img') ? this.querySelector('img').src : '')"><img src="${student.photo}" alt="" loading="lazy" data-i="${escapeHtml((student.name||'؟').trim().charAt(0))}" onerror="this.parentNode.textContent=this.dataset.i"></div>`;
   }
   const initial = (student.name||'؟').trim().charAt(0);
   return `<div class="avatar" style="background:${bg};">${escapeHtml(initial)}</div>`;
 }
 
-function resizeImageFile(file, maxSize=320, quality=0.72){
+function resizeImageFile(file, maxSize=1280, quality=0.9){
   return new Promise((resolve, reject)=>{
     const reader = new FileReader();
     reader.onload = e => {
@@ -5939,7 +6255,7 @@ async function openClassComparison(){
     const stats = c.students.map(s=>calcStats(attendance, s.id)).filter(x=>x.pct!==null);
     const avg = stats.length ? Math.round(stats.reduce((a,x)=>a+x.pct,0)/stats.length) : null;
     const repeatedCount = c.students.filter(s=>currentAbsenceStreak(attendance, s.id) >= 3).length;
-    const todayRecC = attendance[todayStr()] || {};
+    const todayRecC = attendance[sessionDay()] || {};
     let pToday = 0, mToday = 0;
     c.students.forEach(s => { const m = normalizeMark(todayRecC[s.id]); if(m){ mToday++; if(m.status==='present' || m.status==='late') pToday++; } });
     const gsC = genderStats(c.students), asC = ageStats(c.students);
@@ -6003,7 +6319,7 @@ async function openClassDashboard(classId){
   const attendance = await loadAttendanceCached(classId);
   const dates = Object.keys(attendance).sort((a,b)=>b.localeCompare(a));
   const totalServants = c.students.length;
-  const today = todayStr();
+  const today = sessionDay();
   const todayRec = attendance[today] || {};
   const statusCount = (rec, status) => c.students.filter(s => { const m = normalizeMark(rec[s.id]); return m && m.status === status; }).length;
   const presentToday = statusCount(todayRec, 'present');
@@ -6175,7 +6491,7 @@ async function renderStudentRows(classId){
   const c = classes.find(x=>x.id===classId);
   const box = document.getElementById('studentRows');
   const attendance = await loadAttendanceCached(classId);
-  const today = todayStr();
+  const today = sessionDay();
   const todayRec = attendance[today] || {};
 
   document.querySelectorAll('#servantFilterChips button').forEach(b=>{
@@ -6499,6 +6815,7 @@ async function openQr(classId){
 async function renderSelfCheckin(classId, studentId, token){
   setLoggedIn(null);
   const fail = m => { app.innerHTML = `${churchBanner()}<div class="card empty">${m}</div>`; };
+  if(!isSessionDay(todayStr())){ fail('تسجيل الحضور بالـQR متاح يوم الجمعة بس.'); return; }
   if(!FD || !token || !FridayData.isUuid(classId) || !FridayData.isUuid(studentId)){ fail('رابط غير صالح — المخدوم مش موجود.'); return; }
   let r;
   try{ r = await FD.studentCheckin(classId, studentId, token); }
@@ -6769,13 +7086,14 @@ function openPhotoPreview(src){
   if(!src) return;
   const bg = document.createElement('div');
   bg.className = 'modal-bg photo-preview';
-  bg.style.cssText = 'background:rgba(0,0,0,.88);z-index:200;';
+  bg.style.cssText = 'background:rgba(0,0,0,.92);z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:0;';
   bg.innerHTML = `
     <button class="pp-close" aria-label="${t('close')}" style="position:fixed;top:14px;inset-inline-end:14px;width:44px;height:44px;border-radius:50%;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:22px;cursor:pointer;">✕</button>
     <div class="pp-load" style="color:#fff;font-size:14px;">${'جارِ التحميل'}...</div>
-    <img alt="" style="display:none;max-width:94vw;max-height:86vh;object-fit:contain;border-radius:10px;touch-action:pinch-zoom;">`;
+    <img alt="" style="display:none;width:min(96vw,720px);max-height:88vh;margin:auto;object-fit:contain;border-radius:12px;image-rendering:auto;touch-action:pinch-zoom;box-shadow:0 10px 40px rgba(0,0,0,.6);">`;
   const img = bg.querySelector('img'), load = bg.querySelector('.pp-load');
   img.onload = () => { load.style.display='none'; img.style.display='block'; };
+  if(img.decoding !== undefined) img.decoding = 'async';
   img.onerror = () => { load.textContent = 'تعذر تحميل الصورة'; };
   img.src = src;
   const close = () => { document.removeEventListener('keydown', onKey); bg.remove(); };
@@ -6814,24 +7132,9 @@ async function saveStudentProfile(classId, studentId){
 
 /* ---------------- TEACHER VIEW ---------------- */
 
-async function openClassByCard(classId, key){
-  // returns true when the class opened; false (with a message shown) otherwise
-  if(!FD || !key) return false;
-  try{ await FD.openCard(classId, key); }
-  catch(e){
-    renderLogin(e && e.code === 'network' ? 'مفيش نت — اتصل بالإنترنت وامسح الكارت تاني'
-      : 'الكارت ده قديم أو غير صالح — اطلب كارت جديد من المسؤول أو سجّل دخولك');
-    return true;
-  }
+async function renderTeacherFromQr(classId){
   pendingClassTarget = classId;
-  await enterApp();
-  return true;
-}
-async function renderTeacherFromQr(classId, key){
-  pendingClassTarget = classId;
-  const sess = FD && FD.session();
-  if(sess && sess.user && !sess.card){ await enterApp(); return; }      // a signed-in servant/admin
-  if(await openClassByCard(classId, key)) return;
+  if(FD && FD.session().user){ await enterApp(); return; }
   renderLogin('سجّل دخولك علشان تفتح الفصل');
 }
 
@@ -6892,7 +7195,7 @@ function renderLogin(msg, good){
       </div>
 
       <div class="login-card" style="text-align:center;">
-        <div class="sub">عندك كارت QR لفصلك؟ امسحه وهتدخل الفصل على طول</div>
+        <div class="sub">عندك كارت QR لفصل؟ امسحه وبعدها سجّل دخولك</div>
         <button class="btn btn-line scan-btn" style="margin-top:10px;" onclick="openQrScanner()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V6a2 2 0 0 1 2-2h3M15 4h3a2 2 0 0 1 2 2v3M20 15v3a2 2 0 0 1-2 2h-3M9 20H6a2 2 0 0 1-2-2v-3"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg> مسح كارت الـQR</button>
       </div>
 
@@ -6911,10 +7214,6 @@ function renderLogin(msg, good){
 let qrScanner = null;
 let qrScanLocked = false;
 
-function getKeyFromQrText(decodedText){
-  try{ const k = new URL(decodedText, location.href).searchParams.get('k'); if(k) return k; }catch(e){}
-  return null;
-}
 function getClassIdFromQrText(decodedText){
   try{
     const url = new URL(decodedText, location.href);
@@ -7018,7 +7317,7 @@ async function onQrScanSuccess(decodedText){
   const modal = document.getElementById('qrScannerModal');
   if(modal) modal.remove();
   if(checkin){ renderSelfCheckin(checkin.ids[0], checkin.ids[1], checkin.t); return; }
-  renderTeacherFromQr(classId, getKeyFromQrText(decodedText));
+  renderTeacherFromQr(classId);
 }
 
 async function closeQrScanner(){
@@ -7041,6 +7340,7 @@ function changeTeacherDate(classId, value){
   const c = classes.find(x=>x.id===classId);
   if(!c || !value) return;
   if(value > todayStr()) value = todayStr();      // no marking the future
+  if(!isSessionDay(value)){ value = sessionDayOnOrBefore(value); alert('الحضور بيتسجل يوم الجمعة بس، فاخترنا لك الجمعة ' + value); }
   renderTeacherDashboard(c, value);
 }
 
@@ -7058,10 +7358,10 @@ function filterAttRows(){
 async function renderTeacherDashboard(c, viewDate){
   if(!window.__ctx) setLoggedIn({k:'teacher', id:c.id});
   const classId = c.id;
-  window.__viewClass = classId; window.__viewDate = viewDate || todayStr();
+  window.__viewClass = classId; window.__viewDate = viewDate || sessionDay();
   const attendance = await loadAttendanceCached(classId);
-  const date = viewDate || todayStr();
-  const isToday = date === todayStr();
+  const date = viewDate || sessionDay();
+  const isToday = date === sessionDay();
   const todayRec = attendance[date] || {};
   const prevActive = document.querySelector('.bottom-nav .nav-item.active');
   let startTab = (viewDate && prevActive && document.getElementById('attList')) ? prevActive.dataset.nav : 'home';
@@ -7086,9 +7386,9 @@ async function renderTeacherDashboard(c, viewDate){
       <div class="home-who"><div class="home-hi">مرحباً</div><div class="home-name" id="homeName" dir="auto"></div><div class="home-role" id="homeRole"></div></div>
     </div>
     <div class="home-stats" data-tab="home">
-      <div class="home-stat"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></div><div class="hs-n" id="hsA">0</div><div class="hs-l">المخدومين</div></div>
-      <div class="home-stat"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></div><div class="hs-n" id="hsB">0</div><div class="hs-l">حاضر النهاردة</div></div>
-      <div class="home-stat"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div><div class="hs-n" id="hsC">0</div><div class="hs-l">غايب النهاردة</div></div>
+      <div class="home-stat" role="button" tabindex="0" onclick="openPeopleList('all',window.__viewClass)"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></div><div class="hs-n" id="hsA">0</div><div class="hs-l">المخدومين</div></div>
+      <div class="home-stat" role="button" tabindex="0" onclick="openPeopleList('present',window.__viewClass)"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></div><div class="hs-n" id="hsB">0</div><div class="hs-l">حاضر النهاردة</div></div>
+      <div class="home-stat" role="button" tabindex="0" onclick="openPeopleList('absent',window.__viewClass)"><div class="hs-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div><div class="hs-n" id="hsC">0</div><div class="hs-l">غايب النهاردة</div></div>
     </div>
     <div class="card home-att" data-tab="home">
       <label>حضور النهاردة</label>
@@ -7105,21 +7405,22 @@ async function renderTeacherDashboard(c, viewDate){
       <label>إجراءات سريعة</label>
       <div class="quick-grid">
         <button type="button" class="qa" onclick="setTab('attendance')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span>تسجيل الحضور</span></button>
-        ${(FD && FD.session().card) ? '' : `<button type="button" class="qa" onclick="manageStudents('${classId}')"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c2 .7 3 2.6 3 6"/></svg><span>المخدومين (إضافة / حذف)</span></button>`}
+        <button type="button" class="qa" onclick="manageStudents('${classId}')"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c2 .7 3 2.6 3 6"/></svg><span>المخدومين (إضافة / حذف)</span></button>
         <button type="button" class="qa" onclick="setTab('stats')"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>نسب الحضور</span></button>
         <button type="button" class="qa" onclick="openClassDashboard('${classId}')"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg><span>لوحة الفصل</span></button>
       </div>
     </div>
 
     ${alertsHtml(c, attendance, 'home')}
-    ${alertsHtml(c, attendance, 'attendance')}
+    <div id="svAlerts" data-tab="home">${alertsHtml(c, attendance, 'home')}</div>
 
     <div class="card" data-tab="attendance">
-      <label>${isToday ? 'تسجيل الحضور لليوم' : 'تعديل حضور يوم سابق'}</label>
+      <label>${isToday ? 'تسجيل حضور يوم الجمعة' : 'تعديل حضور جمعة سابقة'}</label>
       <div class="field">
-        <input type="date" value="${date}" max="${todayStr()}" onchange="changeTeacherDate('${classId}', this.value)">
+        <div style="display:flex;gap:8px;align-items:center;"><button type="button" class="btn btn-line" style="flex:0 0 auto;" onclick="shiftFriday('${classId}', -1)">▶ الجمعة اللي فاتت</button><input type="date" style="flex:1;" value="${date}" max="${sessionDay()}" onchange="changeTeacherDate('${classId}', this.value)"><button type="button" class="btn btn-line" style="flex:0 0 auto;" onclick="shiftFriday('${classId}', 1)">الجمعة الجاية ◀</button></div>
+        <div style="font-size:11px;opacity:.7;margin-top:6px;">الحضور بيتسجل يوم الجمعة بس</div>
       </div>
-      ${isToday ? '' : `<div style="font-size:12px;color:var(--late);margin-bottom:10px;">⚠️ إنت بتعدّل يوم ${date}. اختار تاريخ النهاردة للرجوع.</div>`}
+      ${isToday ? '' : `<div style="font-size:12px;color:var(--late);margin-bottom:10px;">⚠️ إنت بتعدّل يوم ${date}. ارجع لآخر جمعة.</div>`}
       ${c.students.length > 8 ? `<div class="field"><input type="search" placeholder="🔍 بحث بالاسم" oninput="filterAttRows()"></div>` : ''}
       ${c.students.length ? filterBarHtml('af', 'filterAttRows()') : ''}
       <div class="att-list" id="attList"></div>
@@ -7140,6 +7441,7 @@ async function renderTeacherDashboard(c, viewDate){
     ], startTab)}
   `;
   setTab(startTab, true);
+  window.__viewClass = classId;
   window.__refreshServantHome = () => loadAttendanceCached(classId).then(a => fillServantHome(c, a)).catch(() => {});
   fillServantHome(c, attendance);
 
@@ -7159,7 +7461,7 @@ async function renderTeacherDashboard(c, viewDate){
           ${STATUS_ORDER.map(st => `<button class="${STATUS_META[st].cls} ${mark && mark.status===st ? 'on' : ''}"
             onclick="markAttendance('${c.id}','${date}','${s.id}','${st}')">${STATUS_META[st].label}</button>`).join('')}
         </div>
-        <div class="mark-time" id="markTime-${s.id}">${mark && mark.time ? 'وقت التسجيل: ' + mark.time : ''}</div>
+        <div class="mark-time" id="markTime-${s.id}">${markInfo(mark)}</div>
       </div>`;
     }).join('');
   }
@@ -7178,6 +7480,7 @@ async function renderTeacherDashboard(c, viewDate){
 const markBusy = new Set();
 async function markAttendance(classId, date, studentId, status, refreshScreen){
   if(denyIfNotAllowed(classId)) return;
+  if(!isSessionDay(date)){ alert('الحضور بيتسجل يوم الجمعة بس.'); return; }
   const busyKey = classId + '|' + date + '|' + studentId;
   if(markBusy.has(busyKey)) return;           // ignore repeated taps while this one is being saved
   markBusy.add(busyKey);
@@ -7192,7 +7495,7 @@ async function markAttendance(classId, date, studentId, status, refreshScreen){
 
     let newMark;
     if(prevMark && prevMark.status === status){ delete rec[studentId]; newMark = undefined; }   // tapping the active status again cancels it
-    else{ newMark = { status, time: nowTimeStr() }; rec[studentId] = newMark; }
+    else{ newMark = { status, time: nowTimeStr(), by: myUid() }; rec[studentId] = newMark; }
     attendance[date] = rec;
 
     // The write to this device happens synchronously inside saveAttendance; the cloud copy follows in the
@@ -7215,7 +7518,7 @@ async function markAttendance(classId, date, studentId, status, refreshScreen){
         if(activeBtn){ activeBtn.classList.add('on'); if(status==='present'){ void activeBtn.offsetWidth; activeBtn.classList.add('burst'); } }
       }
       const timeEl = row.querySelector('.mark-time');
-      if(timeEl) timeEl.textContent = newMark && newMark.time ? 'وقت التسجيل: ' + newMark.time : '';
+      if(timeEl) timeEl.textContent = markInfo(newMark);
     }
     if(newMark && status==='present') presentFeedback(); else if(newMark && status==='absent') absentFeedback(); else hapticTick();
     renderStats(c, attendance);
@@ -7418,6 +7721,8 @@ document.addEventListener('focusout', () => { setTimeout(() => { const a = docum
 (async function init(){
   applyLangDirection();
   initTheme();
+  applyFontScale(fsKey());
+  if(IS_NATIVE_APP) remResync();
   if(!IS_NATIVE_APP){
     setupManifestAndIcons();
     registerServiceWorker();
@@ -7445,10 +7750,8 @@ document.addEventListener('focusout', () => { setTimeout(() => { const a = docum
   app.innerHTML = `<div class="empty">جارِ التحميل...</div>`;
   let sess = null;
   try{ sess = await FD.restoreSession(); }catch(e){ console.warn('restore failed', e); }
-  if(sess){ await enterApp(); return; }
-  const cardKey = params.get('k');
-  if(teacherParam && cardKey){ if(await openClassByCard(teacherParam, cardKey)) return; }
-  renderLogin(teacherParam ? 'سجّل دخولك علشان تفتح الفصل' : '');
+  if(sess) await enterApp();
+  else renderLogin(teacherParam ? 'سجّل دخولك علشان تفتح الفصل' : '');
 })();
 
 </script>

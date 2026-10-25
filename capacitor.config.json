@@ -1,6 +1,6 @@
 {
   "appId": "org.sundayschool.attendance",
-  "appName": "Friday",
+  "appName": "حضور الأحد",
   "webDir": "www",
   "backgroundColor": "#1F3358",
   "android": {
